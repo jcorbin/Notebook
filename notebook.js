@@ -45,6 +45,7 @@ function Notebook(canvas) {
     ctx.stroke();
   }
   function stop(evt) {
+    if (! self.currentStroke) return;
     self.currentStroke = null;
     self.redraw();
   }
