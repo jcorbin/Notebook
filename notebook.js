@@ -107,6 +107,12 @@ Notebook.prototype.redraw = function() {
 Notebook.prototype.draw = function() {
   this.currentPage.draw(this);
 };
+Notebook.prototype.clearPage = function() {
+  if (! this.currentPage) return;
+  this.currentPage.clear();
+  this.save();
+  this.redraw();
+};
 /*
 Notebook.prototype.updateSize = function(win) {
   this.canvas.width = this.canvas.parentNode.clientWidth;
@@ -199,6 +205,9 @@ Notebook.Page.prototype.drawPaper = function(nb) {
 Notebook.Page.prototype.addStroke = function(stroke) {
   this.strokes.push(stroke);
   return stroke;
+};
+Notebook.Page.prototype.clear = function() {
+  this.strokes = [];
 };
 
 
