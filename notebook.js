@@ -21,22 +21,35 @@ function Notebook(canvas) {
   // var win = this.canvas.ownerDocument.defaultView;
   // this.updateSize(win);
 
-  var self = this;
+  var self = this, listening = false;
   // win.addEventListener('resize', function(evt) {self.onWindowResize(evt)});
+  function listen() {
+    if (listening) return true;
+    self.canvas.addEventListener('mousemove', stroke);
+    self.canvas.addEventListener('mouseup', stop);
+    self.canvas.addEventListener('mouseout', stop);
+    listening = true;
+  }
+  function unlisten() {
+    if (! listening) return true;
+    self.canvas.removeEventListener('mousemove', stroke);
+    self.canvas.removeEventListener('mouseup', stop);
+    self.canvas.removeEventListener('mouseout', stop);
+    listening = false;
+  }
 
   function start(evt) {
     self.startStroke(evt.offsetX, evt.offsetY);
+    listen();
   }
   function stroke(evt) {
     self.updateStroke(evt.offsetX, evt.offsetY);
   }
   function stop(evt) {
     self.finishStroke();
+    unlisten();
   }
   this.canvas.addEventListener('mousedown', start);
-  this.canvas.addEventListener('mouseup', stop);
-  this.canvas.addEventListener('mouseout', stop);
-  this.canvas.addEventListener('mousemove', stroke);
 }
 Notebook.prototype.startStroke = function(x, y) {
   this.currentStroke = this.currentPage.addStroke(
