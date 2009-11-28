@@ -42,6 +42,7 @@ function Notebook(canvas) {
   }
   function stop(evt) {
     self.currentStroke = null;
+    self.redraw();
   }
   this.canvas.addEventListener('mousedown', start);
   this.canvas.addEventListener('mouseup', stop);
