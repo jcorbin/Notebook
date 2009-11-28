@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   dpiTest.style.width = '1in';
   Notebook.prototype.dpi = dpiTest.offsetWidth;
   document.body.removeChild(dpiTest);
-});
+}, false);
 
 function Notebook(canvas) {
   if (typeof(canvas) == "string") {
@@ -33,16 +33,16 @@ function Notebook(canvas) {
   // win.addEventListener('resize', function(evt) {self.onWindowResize(evt)});
   function listen() {
     if (listening) return true;
-    self.canvas.addEventListener('mousemove', stroke);
-    self.canvas.addEventListener('mouseup', stop);
-    self.canvas.addEventListener('mouseout', stop);
+    self.canvas.addEventListener('mousemove', stroke, false);
+    self.canvas.addEventListener('mouseup', stop, false);
+    self.canvas.addEventListener('mouseout', stop, false);
     listening = true;
   }
   function unlisten() {
     if (! listening) return true;
-    self.canvas.removeEventListener('mousemove', stroke);
-    self.canvas.removeEventListener('mouseup', stop);
-    self.canvas.removeEventListener('mouseout', stop);
+    self.canvas.removeEventListener('mousemove', stroke, false);
+    self.canvas.removeEventListener('mouseup', stop, false);
+    self.canvas.removeEventListener('mouseout', stop, false);
     listening = false;
   }
 
@@ -57,13 +57,13 @@ function Notebook(canvas) {
     self.finishStroke();
     unlisten();
   }
-  this.canvas.addEventListener('mousedown', start);
+  this.canvas.addEventListener('mousedown', start, false);
 
   window.addEventListener('storage', function(evt) {
     if (self.restore(evt.newValue)) {
       self.redraw();
     }
-  });
+  }, false);
 }
 Notebook.prototype.getStorage = function() {
   return window.localStorage;
