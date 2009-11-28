@@ -59,6 +59,8 @@ Notebook.prototype.getStorage = function() {
 };
 Notebook.prototype.save = function() {
   var data = this.currentPage.serialize();
+  this.currentPage.mtime = (new Date()).getTime();
+  data.mtime = this.currentPage.mtime;
   this.getStorage()['currentPage'] = JSON.stringify(data);
 };
 Notebook.prototype.restore = function(data) {
@@ -70,8 +72,13 @@ Notebook.prototype.restore = function(data) {
   if (data) {
     try {
       data = JSON.parse(data);
-      this.currentPage = Notebook.Page.unserialize(data);
-      return true;
+      if (! this.currentPage || data.mtime > this.currentPage.mtime) {
+        this.currentPage = Notebook.Page.unserialize(data);
+        this.currentPage.mtime = data.mtime;
+        return true;
+      } else {
+        return false;
+      }
     } catch(err) {
       console.log(err.toString());
       if (stor) {
