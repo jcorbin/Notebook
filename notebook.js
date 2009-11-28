@@ -25,35 +25,41 @@ function Notebook(canvas) {
   // win.addEventListener('resize', function(evt) {self.onWindowResize(evt)});
 
   function start(evt) {
-    var x = evt.offsetX, y = evt.offsetY,
-      s = self.currentStroke = self.currentPage.addStroke(
-        new Notebook.Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
-      ),
-      ctx = self.canvas.getContext('2d'),
-      half = s.width/2;
-    ctx.fillRect(x-half, y-half, s.width, s.width);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
+    self.startStroke(evt.offsetX, evt.offsetY);
   }
   function stroke(evt) {
-    if (! self.currentStroke) return;
-    var x = evt.offsetX, y = evt.offsetY,
-      s = self.currentStroke,
-      ctx = self.canvas.getContext('2d');
-    s.addPoint(x, y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
+    self.updateStroke(evt.offsetX, evt.offsetY);
   }
   function stop(evt) {
-    if (! self.currentStroke) return;
-    self.currentStroke = null;
-    self.redraw();
+    self.finishStroke();
   }
   this.canvas.addEventListener('mousedown', start);
   this.canvas.addEventListener('mouseup', stop);
   this.canvas.addEventListener('mouseout', stop);
   this.canvas.addEventListener('mousemove', stroke);
 }
+Notebook.prototype.startStroke = function(x, y) {
+  this.currentStroke = this.currentPage.addStroke(
+    new Notebook.Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
+  );
+  var ctx = this.canvas.getContext('2d'),
+    width = this.currentStroke.width, half = width/2;
+  ctx.fillRect(x-half, y-half, width, width);
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+};
+Notebook.prototype.updateStroke = function(x, y) {
+  if (! this.currentStroke) return;
+  var ctx = this.canvas.getContext('2d');
+  this.currentStroke.addPoint(x, y);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+};
+Notebook.prototype.finishStroke = function() {
+  if (! this.currentStroke) return;
+  this.currentStroke = null;
+  this.redraw();
+};
 Notebook.prototype.redraw = function() {
   this.canvas.width = this.canvas.width;
   this.draw();
