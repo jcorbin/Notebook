@@ -4,59 +4,48 @@ function Page(width, height, paper) {
   if (paper == undefined) {
     paper = "ruled";
   }
-  if (typeof(paper) == "string") {
-    paper = Page.PaperTypes[paper];
-  }
-  if (typeof(paper) != "function") {
-    throw(new Error("invalid paper"));
-  }
   this.paper = paper;
   this.strokes = [];
 }
-Page.PaperTypes = {
-  'lined': function(nb) {
-    var ctx = nb.canvas.getContext('2d'),
-      spacing = nb.dpi/5,
-      start = nb.dpi,
-      width = 2, half=width/2;
-    ctx.fillStyle = 'rgba(64, 64, 192, 0.25)';
-    for (var i=start; i<nb.canvas.height; i+=spacing) {
-      ctx.fillRect(0, i-half, nb.canvas.width, width);
-    }
-  },
-  'ruled': function(nb) {
-    var ctx = nb.canvas.getContext('2d'),
-      margin = 4/5*nb.dpi, marginRuleWidth = 3;
-    ctx.fillStyle = 'rgba(192, 64, 64, 0.25)';
-    ctx.fillRect(margin - marginRuleWidth/2, 0, marginRuleWidth, nb.canvas.height);
-
-    var
-      spacing = nb.dpi/5,
-      start = nb.dpi,
-      width = 2, half=width/2;
-    ctx.fillStyle = 'rgba(64, 64, 192, 0.25)';
-    for (var i=start; i<nb.canvas.height; i+=spacing) {
-      ctx.fillRect(0, i-half, nb.canvas.width, width);
-    }
-  },
-  'grid': function(nb) {
-    var ctx = nb.canvas.getContext('2d'),
-      spacing = nb.dpi/5, width = 2, half = width/2;
-    ctx.fillStyle = 'rgba(32, 96, 32, 0.25)';
-    for (var i=spacing; i<nb.canvas.width; i+=spacing) {
-      ctx.fillRect(i-half, 0, width, nb.canvas.height);
-    }
-    for (var i=spacing; i<nb.canvas.height; i+=spacing) {
-      ctx.fillRect(0, i-half, nb.canvas.width, width);
-    }
-  }
-};
 Page.prototype.draw = function(nb) {
-  this.paper(nb);
+  if (typeof(this.paper) == "function") {
+    this.paper(this, nb);
+  } else {
+    this.drawPaper(nb);
+  }
 
   // Draw strokes
   for (var i=0; i<this.strokes.length; i++) {
     this.strokes[i].draw(nb);
+  }
+};
+Page.prototype.drawPaper = function(nb) {
+  if (this.paper == "blank") return;
+
+  var ctx = nb.canvas.getContext('2d');
+
+  switch (this.paper) {
+    case 'ruled':
+      var margin = 4/5*nb.dpi, marginRuleWidth = 3;
+      ctx.fillStyle = 'rgba(192, 64, 64, 0.25)';
+      ctx.fillRect(margin - marginRuleWidth/2, 0, marginRuleWidth, nb.canvas.height);
+    case 'lined':
+      var spacing = nb.dpi/5, width = 2, half=width/2, start = nb.dpi;
+      ctx.fillStyle = 'rgba(64, 64, 192, 0.25)';
+      for (var i=start; i<nb.canvas.height; i+=spacing) {
+        ctx.fillRect(0, i-half, nb.canvas.width, width);
+      }
+      break;
+    case 'grid':
+      var spacing = nb.dpi/5, width = 2, half = width/2;
+      ctx.fillStyle = 'rgba(32, 96, 32, 0.25)';
+      for (var i=spacing; i<nb.canvas.width; i+=spacing) {
+        ctx.fillRect(i-half, 0, width, nb.canvas.height);
+      }
+      for (var i=spacing; i<nb.canvas.height; i+=spacing) {
+        ctx.fillRect(0, i-half, nb.canvas.width, width);
+      }
+      break;
   }
 };
 Page.prototype.addStroke = function(stroke) {
