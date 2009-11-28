@@ -82,6 +82,27 @@ Notebook.Page = function(width, height, options) {
   this.options.paper = this.options.paper || 'ruled';
   this.strokes = [];
 };
+Notebook.Page.unserialize = function(data) {
+  var page = new Notebook.Page(data.width, data.height, data.options);
+  if (data.strokes) {
+    for (var i=0; i<data.strokes.length; i++) {
+      page.strokes.push(Notebook.Stroke.unserialize(data.strokes[i]));
+    }
+  }
+  return page;
+};
+Notebook.Page.prototype.serialize = function() {
+  var data = {
+    width: this.width,
+    height: this.height,
+    options: this.options,
+    strokes: []
+  };
+  for (var i=0; i<this.strokes.length; i++) {
+    data.strokes.push(this.strokes[i].serialize());
+  }
+  return data;
+};
 Notebook.Page.prototype.draw = function(nb) {
   if (typeof(this.options.paper) == "function") {
     this.options.paper(this, nb);
