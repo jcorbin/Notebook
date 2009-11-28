@@ -58,7 +58,8 @@ Notebook.prototype.getStorage = function() {
   return this.getWindow().localStorage;
 };
 Notebook.prototype.save = function() {
-  this.getStorage()['currentPage'] = JSON.stringify(this.currentPage.serialize());
+  var data = this.currentPage.serialize();
+  this.getStorage()['currentPage'] = JSON.stringify(data);
 };
 Notebook.prototype.restore = function() {
   var stor = this.getStorage();
@@ -66,8 +67,7 @@ Notebook.prototype.restore = function() {
     try {
       var data = stor['currentPage'];
       data = JSON.parse(data);
-      data = Notebook.Page.unserialize(data);
-      this.currentPage = data;
+      this.currentPage = Notebook.Page.unserialize(data);
       return true;
     } catch(err) {
       console.log(err.toString());
