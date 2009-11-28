@@ -1,12 +1,20 @@
 var Notebook = (function () {
 
+document.addEventListener('DOMContentLoaded', function() {
+  var dpiTest = document.body.appendChild(
+    document.createElement('div')
+  );
+  dpiTest.style.width = '1in';
+  Notebook.prototype.dpi = dpiTest.offsetWidth;
+  document.body.removeChild(dpiTest);
+});
+
 function Notebook(canvas) {
   if (typeof(canvas) == "string") {
     canvas = document.getElementById(canvas);
   }
 
   this.canvas = canvas;
-  this.dpi = 100;
   this.currentStroke = null;
   this.currentPage = null;
 
