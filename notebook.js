@@ -133,7 +133,9 @@ Notebook.Stroke = function(width, color, startX, startY) {
   this.color = color;
   this.width = width;
   this.points = [];
-  this.addPoint(startX, startY);
+  if (startX != undefined && startY != undefined) {
+    this.addPoint(startX, startY);
+  }
 };
 Notebook.Stroke.prototype.addPoint = function(x, y) {
   this.points.push([x, y]);
