@@ -51,6 +51,9 @@ function Notebook(canvas) {
   }
   this.canvas.addEventListener('mousedown', start);
 }
+Notebook.prototype.getWindow = function() {
+  return this.canvas.ownerDocument.defaultView;
+};
 Notebook.prototype.startStroke = function(x, y) {
   this.currentStroke = this.currentPage.addStroke(
     new Notebook.Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
