@@ -50,6 +50,12 @@ function Notebook(canvas) {
     unlisten();
   }
   this.canvas.addEventListener('mousedown', start);
+
+  this.getWindow().addEventListener('storage', function(evt) {
+    if (self.restore(evt.newValue)) {
+      self.redraw();
+    }
+  });
 }
 Notebook.prototype.getWindow = function() {
   return this.canvas.ownerDocument.defaultView;
