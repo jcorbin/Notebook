@@ -12,8 +12,11 @@
       }
     </style>
     <script language="JavaScript" src="notebook.js"></script>
+    <script language="JavaScript">
+      var nb = null;
+    </script>
   </head>
-  <body onload="new Notebook('c')">
+  <body onload="nb = new Notebook('c')">
 
     <canvas style="margin: 0 auto 0 auto" id="c"></canvas>
 
