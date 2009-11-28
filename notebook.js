@@ -10,7 +10,7 @@ function Notebook(canvas) {
   this.currentStroke = null;
   this.currentPage = null;
 
-  if (! this.currentPage) {
+  if (! this.restore()) {
     this.currentPage = new Notebook.Page(8.5*this.dpi, 11*this.dpi);
   }
 
@@ -54,6 +54,29 @@ function Notebook(canvas) {
 Notebook.prototype.getWindow = function() {
   return this.canvas.ownerDocument.defaultView;
 };
+Notebook.prototype.getStorage = function() {
+  return this.getWindow().localStorage;
+};
+Notebook.prototype.save = function() {
+  this.getStorage()['currentPage'] = JSON.stringify(this.currentPage.serialize());
+};
+Notebook.prototype.restore = function() {
+  var stor = this.getStorage();
+  if (stor['currentPage']) {
+    try {
+      var data = stor['currentPage'];
+      data = JSON.parse(data);
+      data = Notebook.Page.unserialize(data);
+      this.currentPage = data;
+      return true;
+    } catch(err) {
+      console.log(err.toString());
+      delete stor['currentPage'];
+      this.currentPage = null;
+    }
+  }
+  return false;
+};
 Notebook.prototype.startStroke = function(x, y) {
   this.currentStroke = this.currentPage.addStroke(
     new Notebook.Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
@@ -73,6 +96,7 @@ Notebook.prototype.updateStroke = function(x, y) {
 };
 Notebook.prototype.finishStroke = function() {
   if (! this.currentStroke) return;
+  this.save();
   this.currentStroke = null;
   this.redraw();
 };
