@@ -59,17 +59,14 @@ function Notebook(canvas) {
   }
   this.canvas.addEventListener('mousedown', start);
 
-  this.getWindow().addEventListener('storage', function(evt) {
+  window.addEventListener('storage', function(evt) {
     if (self.restore(evt.newValue)) {
       self.redraw();
     }
   });
 }
-Notebook.prototype.getWindow = function() {
-  return this.canvas.ownerDocument.defaultView;
-};
 Notebook.prototype.getStorage = function() {
-  return this.getWindow().localStorage;
+  return window.localStorage;
 };
 Notebook.prototype.save = function() {
   var data = this.currentPage.serialize();
