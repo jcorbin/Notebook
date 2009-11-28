@@ -14,12 +14,18 @@
     <script language="JavaScript" src="notebook.js"></script>
     <script language="JavaScript">
       var nb = null;
+      window.onload = function() {
+        nb = new Notebook('c');
+        document.getElementById('clear').addEventListener('click', function() {
+          nb.clearPage();
+        });
+      };
     </script>
   </head>
-  <body onload="nb = new Notebook('c')">
+  <body>
 
     <nav>
-      <button onclick="nb.clearPage();">Clear</button>
+      <button id="clear">Clear</button>
     </nav>
     <canvas style="margin: 0 auto 0 auto" id="c"></canvas>
 
