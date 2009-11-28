@@ -75,18 +75,16 @@ Notebook.prototype.onWindowResize = function(evt) {
 };
 */
 
-Notebook.Page = function(width, height, paper) {
+Notebook.Page = function(width, height, options) {
   this.width = width;
   this.height = height;
-  if (paper == undefined) {
-    paper = "ruled";
-  }
-  this.paper = paper;
+  this.options = options || {};
+  this.options.paper = this.options.paper || 'ruled';
   this.strokes = [];
 };
 Notebook.Page.prototype.draw = function(nb) {
-  if (typeof(this.paper) == "function") {
-    this.paper(this, nb);
+  if (typeof(this.options.paper) == "function") {
+    this.options.paper(this, nb);
   } else {
     this.drawPaper(nb);
   }
@@ -97,11 +95,11 @@ Notebook.Page.prototype.draw = function(nb) {
   }
 };
 Notebook.Page.prototype.drawPaper = function(nb) {
-  if (this.paper == "blank") return;
+  if (this.options.paper == "blank") return;
 
   var ctx = nb.canvas.getContext('2d');
 
-  switch (this.paper) {
+  switch (this.options.paper) {
     case 'ruled':
       var margin = 4/5*nb.dpi, marginRuleWidth = 3;
       ctx.fillStyle = 'rgba(192, 64, 64, 0.25)';
