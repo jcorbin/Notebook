@@ -19,6 +19,18 @@
         document.getElementById('clear').addEventListener('click', function() {
           nb.clearPage();
         });
+        var pt = document.getElementById('paperType');
+        for (var i=0, l=Notebook.Page.paperTypes; i<l.length; i++) {
+          var opt = pt.appendChild(document.createElement('option'));
+          opt.value = l[i];
+          opt.appendChild(document.createTextNode(
+            l[i][0].toUpperCase()+l[i].substr(1)
+          ));
+        }
+        pt.value = nb.currentPage.options.paper;
+        pt.addEventListener('change', function() {
+          nb.setPaper(this.value);
+        });
       };
     </script>
   </head>
@@ -26,6 +38,7 @@
 
     <nav>
       <button id="clear">Clear</button>
+      <select id="paperType"></select>
     </nav>
     <canvas style="margin: 0 auto 0 auto" id="c"></canvas>
 

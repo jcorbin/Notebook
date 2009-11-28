@@ -131,6 +131,11 @@ Notebook.prototype.clearPage = function() {
   this.save();
   this.redraw();
 };
+Notebook.prototype.setPaper = function(paper) {
+  this.currentPage.options.paper = paper;
+  this.save();
+  this.redraw();
+};
 /*
 Notebook.prototype.updateSize = function(win) {
   this.canvas.width = this.canvas.parentNode.clientWidth;
