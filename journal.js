@@ -1,3 +1,5 @@
+var Notebook = (function () {
+
 function Notebook(canvas) {
   if (typeof(canvas) == "string") {
     canvas = document.getElementById(canvas);
@@ -5,7 +7,7 @@ function Notebook(canvas) {
 
   this.canvas = canvas;
   this.dpi = 100;
-  this.currentPage = new Page(8.5*this.dpi, 11*this.dpi, 'ruled');
+  this.currentPage = new Notebook.Page(8.5*this.dpi, 11*this.dpi, 'ruled');
   this.currentStroke = null;
 
   this.canvas.width = this.currentPage.width;
@@ -21,7 +23,7 @@ function Notebook(canvas) {
   function start(evt) {
     var x = evt.offsetX, y = evt.offsetY,
       s = self.currentStroke = self.currentPage.addStroke(
-        new Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
+        new Notebook.Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
       ),
       ctx = self.canvas.getContext('2d'),
       half = s.width/2;
@@ -73,8 +75,7 @@ Notebook.prototype.onWindowResize = function(evt) {
 };
 */
 
-
-function Page(width, height, paper) {
+Notebook.Page = function(width, height, paper) {
   this.width = width;
   this.height = height;
   if (paper == undefined) {
@@ -82,8 +83,8 @@ function Page(width, height, paper) {
   }
   this.paper = paper;
   this.strokes = [];
-}
-Page.prototype.draw = function(nb) {
+};
+Notebook.Page.prototype.draw = function(nb) {
   if (typeof(this.paper) == "function") {
     this.paper(this, nb);
   } else {
@@ -95,7 +96,7 @@ Page.prototype.draw = function(nb) {
     this.strokes[i].draw(nb);
   }
 };
-Page.prototype.drawPaper = function(nb) {
+Notebook.Page.prototype.drawPaper = function(nb) {
   if (this.paper == "blank") return;
 
   var ctx = nb.canvas.getContext('2d');
@@ -124,22 +125,22 @@ Page.prototype.drawPaper = function(nb) {
       break;
   }
 };
-Page.prototype.addStroke = function(stroke) {
+Notebook.Page.prototype.addStroke = function(stroke) {
   this.strokes.push(stroke);
   return stroke;
 };
 
 
-function Stroke(width, color, startX, startY) {
+Notebook.Stroke = function(width, color, startX, startY) {
   this.color = color;
   this.width = width;
   this.points = [];
   this.addPoint(startX, startY);
 }
-Stroke.prototype.addPoint = function(x, y) {
+Notebook.Stroke.prototype.addPoint = function(x, y) {
   this.points.push([x, y]);
 };
-Stroke.prototype.draw = function(nb) {
+Notebook.Stroke.prototype.draw = function(nb) {
   if (this.points.length <= 1) return;
   ctx = nb.canvas.getContext('2d');
   ctx.strokeStyle = this.color;
@@ -152,5 +153,8 @@ Stroke.prototype.draw = function(nb) {
   }
   ctx.stroke();
 };
+
+return Notebook;
+})();
 
 // vim:set ts=2 sw=2 expandtab:
