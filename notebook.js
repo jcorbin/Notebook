@@ -158,6 +158,7 @@ Notebook.Page = function(width, height, options) {
   this.options.paper = this.options.paper || 'ruled';
   this.strokes = [];
 };
+Notebook.Page.paperTypes = ['blank', 'ruled', 'lined', 'grid'];
 Notebook.Page.unserialize = function(data) {
   var page = new Notebook.Page(data.width, data.height, data.options);
   if (data.strokes) {
