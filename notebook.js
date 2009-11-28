@@ -46,12 +46,28 @@ function Notebook(canvas) {
     listening = false;
   }
 
+  function eventXY(evt) {
+    if (evt.offsetX == undefined || evt.offsetY == undefined) {
+      xy = [evt.pageX, evt.pageY];
+      off = evt.target;
+      while (off) {
+        xy[0] -= off.offsetLeft;
+        xy[1] -= off.offsetTop;
+        off = off.offsetParent;
+      }
+      return xy;
+    } else {
+      return [evt.offsetX, evt.offsetY];
+    }
+  }
   function start(evt) {
-    self.startStroke(evt.offsetX, evt.offsetY);
+    var xy = eventXY(evt);
+    self.startStroke(xy[0], xy[1]);
     listen();
   }
   function stroke(evt) {
-    self.updateStroke(evt.offsetX, evt.offsetY);
+    var xy = eventXY(evt);
+    self.updateStroke(xy[0], xy[1]);
   }
   function stop(evt) {
     self.finishStroke();
