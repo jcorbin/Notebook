@@ -61,18 +61,23 @@ Notebook.prototype.save = function() {
   var data = this.currentPage.serialize();
   this.getStorage()['currentPage'] = JSON.stringify(data);
 };
-Notebook.prototype.restore = function() {
-  var stor = this.getStorage();
-  if (stor['currentPage']) {
+Notebook.prototype.restore = function(data) {
+  var stor = null;
+  if (data == undefined) {
+    stor = this.getStorage();
+    data = stor['currentPage'];
+  }
+  if (data) {
     try {
-      var data = stor['currentPage'];
       data = JSON.parse(data);
       this.currentPage = Notebook.Page.unserialize(data);
       return true;
     } catch(err) {
       console.log(err.toString());
-      delete stor['currentPage'];
-      this.currentPage = null;
+      if (stor) {
+        delete stor['currentPage'];
+        this.currentPage = null;
+      }
     }
   }
   return false;
