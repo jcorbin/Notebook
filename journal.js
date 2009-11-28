@@ -1,3 +1,79 @@
+function Notebook(canvas) {
+  if (typeof(canvas) == "string") {
+    canvas = document.getElementById(canvas);
+  }
+
+  this.canvas = canvas;
+  this.dpi = 100;
+  this.currentPage = new Page(8.5*this.dpi, 11*this.dpi, 'ruled');
+  this.currentStroke = null;
+
+  this.canvas.width = this.currentPage.width;
+  this.canvas.height = this.currentPage.height;
+  this.draw();
+
+  // var win = this.canvas.ownerDocument.defaultView;
+  // this.updateSize(win);
+
+  var self = this;
+  // win.addEventListener('resize', function(evt) {self.onWindowResize(evt)});
+
+  function start(evt) {
+    var x = evt.offsetX, y = evt.offsetY,
+      s = self.currentStroke = self.currentPage.addStroke(
+        new Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
+      ),
+      ctx = self.canvas.getContext('2d'),
+      half = s.width/2;
+    ctx.fillRect(x-half, y-half, s.width, s.width);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+  function stroke(evt) {
+    if (! self.currentStroke) return;
+    var x = evt.offsetX, y = evt.offsetY,
+      s = self.currentStroke,
+      ctx = self.canvas.getContext('2d');
+    s.addPoint(x, y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+  function stop(evt) {
+    self.currentStroke = null;
+  }
+  this.canvas.addEventListener('mousedown', start);
+  this.canvas.addEventListener('mouseup', stop);
+  this.canvas.addEventListener('mouseout', stop);
+  this.canvas.addEventListener('mousemove', stroke);
+}
+Notebook.prototype.redraw = function() {
+  this.canvas.width = this.canvas.width;
+  this.draw();
+};
+Notebook.prototype.draw = function() {
+  this.currentPage.draw(this);
+};
+/*
+Notebook.prototype.updateSize = function(win) {
+  this.canvas.width = this.canvas.parentNode.clientWidth;
+  this.canvas.height = this.canvas.parentNode.clientHeight-4;
+  this.draw();
+};
+Notebook.prototype.onWindowResize = function(evt) {
+  var win = evt.srcElement;
+  if (this.resizeTimeout) {
+    win.clearTimeout(this.resizeTimeout);
+  }
+  var self = this;
+  this.resizeTimeout = win.setTimeout(function() {
+    delete self.resizeTimeout;
+    console.log('update');
+    self.updateSize(win);
+  }, 100);
+};
+*/
+
+
 function Page(width, height, paper) {
   this.width = width;
   this.height = height;
@@ -76,81 +152,5 @@ Stroke.prototype.draw = function(nb) {
   }
   ctx.stroke();
 };
-
-
-function Notebook(canvas) {
-  if (typeof(canvas) == "string") {
-    canvas = document.getElementById(canvas);
-  }
-
-  this.canvas = canvas;
-  this.dpi = 100;
-  this.currentPage = new Page(8.5*this.dpi, 11*this.dpi, 'ruled');
-  this.currentStroke = null;
-
-  this.canvas.width = this.currentPage.width;
-  this.canvas.height = this.currentPage.height;
-  this.draw();
-
-  // var win = this.canvas.ownerDocument.defaultView;
-  // this.updateSize(win);
-
-  var self = this;
-  // win.addEventListener('resize', function(evt) {self.onWindowResize(evt)});
-
-  function start(evt) {
-    var x = evt.offsetX, y = evt.offsetY,
-      s = self.currentStroke = self.currentPage.addStroke(
-        new Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
-      ),
-      ctx = self.canvas.getContext('2d'),
-      half = s.width/2;
-    ctx.fillRect(x-half, y-half, s.width, s.width);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  }
-  function stroke(evt) {
-    if (! self.currentStroke) return;
-    var x = evt.offsetX, y = evt.offsetY,
-      s = self.currentStroke,
-      ctx = self.canvas.getContext('2d');
-    s.addPoint(x, y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  }
-  function stop(evt) {
-    self.currentStroke = null;
-  }
-  this.canvas.addEventListener('mousedown', start);
-  this.canvas.addEventListener('mouseup', stop);
-  this.canvas.addEventListener('mouseout', stop);
-  this.canvas.addEventListener('mousemove', stroke);
-}
-Notebook.prototype.redraw = function() {
-  this.canvas.width = this.canvas.width;
-  this.draw();
-};
-Notebook.prototype.draw = function() {
-  this.currentPage.draw(this);
-};
-/*
-Notebook.prototype.updateSize = function(win) {
-  this.canvas.width = this.canvas.parentNode.clientWidth;
-  this.canvas.height = this.canvas.parentNode.clientHeight-4;
-  this.draw();
-};
-Notebook.prototype.onWindowResize = function(evt) {
-  var win = evt.srcElement;
-  if (this.resizeTimeout) {
-    win.clearTimeout(this.resizeTimeout);
-  }
-  var self = this;
-  this.resizeTimeout = win.setTimeout(function() {
-    delete self.resizeTimeout;
-    console.log('update');
-    self.updateSize(win);
-  }, 100);
-};
-*/
 
 // vim:set ts=2 sw=2 expandtab:
