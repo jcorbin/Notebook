@@ -7,7 +7,7 @@ function Notebook(canvas) {
 
   this.canvas = canvas;
   this.dpi = 100;
-  this.currentPage = new Notebook.Page(8.5*this.dpi, 11*this.dpi, 'ruled');
+  this.currentPage = new Notebook.Page(8.5*this.dpi, 11*this.dpi);
   this.currentStroke = null;
 
   this.canvas.width = this.currentPage.width;
