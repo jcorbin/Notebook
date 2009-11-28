@@ -137,6 +137,26 @@ Notebook.Stroke = function(width, color, startX, startY) {
     this.addPoint(startX, startY);
   }
 };
+Notebook.Stroke.unserialize = function(data) {
+  var stroke = new Notebook.Stroke(data.width, data.color);
+  if (data.points) {
+    for (var i=0, l=data.points; i<l.length; i++) {
+      stroke.points.push([l[i][0], l[i][1]]);
+    }
+  }
+  return stroke;
+};
+Notebook.Stroke.prototype.serialize = function() {
+  var data = {
+    color: this.color,
+    width: this.width,
+    points: []
+  };
+  for (var i=0, l=this.points; i<l.length; i++) {
+    data.points.push([l[i][0], l[i][1]]);
+  }
+  return data;
+};
 Notebook.Stroke.prototype.addPoint = function(x, y) {
   this.points.push([x, y]);
 };
