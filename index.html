@@ -11,35 +11,60 @@
         border: 1px solid #999;
       }
     </style>
+    <link rel="stylesheet" href="closure/goog/demos/css/menus.css" />
+    <link rel="stylesheet" href="closure/goog/demos/css/toolbar.css" />
+    <script language="JavaScript" src="closure/goog/base.js"></script>
     <script language="JavaScript" src="notebook.js"></script>
     <script language="JavaScript">
+      goog.require('goog.dom');
+      goog.require('goog.events');
+      goog.require('goog.ui.Option');
+      goog.require('goog.ui.Toolbar');
+      goog.require('goog.ui.ToolbarRenderer');
+      goog.require('goog.ui.ToolbarButton');
+      goog.require('goog.ui.ToolbarColorMenuButton');
+      goog.require('goog.ui.ToolbarMenuButton');
+      goog.require('goog.ui.ToolbarSelect');
+      goog.require('goog.ui.ToolbarToggleButton');
+
       var nb = null;
       window.onload = function() {
         nb = new Notebook('c');
-        document.getElementById('clear').addEventListener('click', function() {
-          nb.clearPage();
-        }, false);
-        var pt = document.getElementById('paperType');
+
+        // Create toolbar
+        var tb = new goog.ui.Toolbar();
+        tb.decorate(goog.dom.$('toolbar'));
+
+        // Build paper type meun
+        var pt = tb.getChild('paperType');
         for (var i=0, l=Notebook.Page.paperTypes; i<l.length; i++) {
-          var opt = pt.appendChild(document.createElement('option'));
-          opt.value = l[i];
-          opt.appendChild(document.createTextNode(
-            l[i][0].toUpperCase()+l[i].substr(1)
-          ));
+          var title = l[i][0].toUpperCase()+l[i].substr(1);
+          var opt = new goog.ui.Option(title, l[i]);
+          pt.addItem(opt);
+          if (nb.currentPage.options.paper == l[i]) {
+            pt.setSelectedItem(opt);
+          }
         }
-        pt.value = nb.currentPage.options.paper;
-        pt.addEventListener('change', function() {
-          nb.setPaper(this.value);
-        }, false);
+
+        // Hookup
+        goog.events.listen(tb.getChild('clear'), 'action', function(evt) {
+          nb.clearPage();
+        });
+        goog.events.listen(pt, 'action', function(evt) {
+          nb.setPaper(evt.target.getSelectedItem().getValue());
+        });
       };
     </script>
   </head>
   <body>
 
-    <div class="controls">
-      <button id="clear">Clear</button>
-      <select id="paperType"></select>
+    <div id="toolbar" class="goog-toolbar">
+      <div id="clear" class="goog-toolbar-button">Clear</div>
+      <div id="paperType" class="goog-toolbar-select">
+        <div id="paperTypeMenu" class="goog-menu"></div>
+      </div>
     </div>
+
     <canvas style="margin: 0 auto 0 auto" id="c"></canvas>
 
     <div>
