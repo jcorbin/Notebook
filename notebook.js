@@ -1,5 +1,7 @@
 goog.provide('wunjo.Notebook');
 
+goog.require('goog.array');
+
 wunjo.Notebook.Page = function(width, height, options) {
   this.width = width;
   this.height = height;
