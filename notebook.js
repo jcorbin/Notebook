@@ -1,20 +1,12 @@
 goog.provide('wunjo.Notebook');
 
-document.addEventListener('DOMContentLoaded', function() {
-  var dpiTest = document.body.appendChild(
-    document.createElement('div')
-  );
-  dpiTest.style.width = '1in';
-  wunjo.Notebook.prototype.dpi = dpiTest.offsetWidth;
-  document.body.removeChild(dpiTest);
-}, false);
-
 wunjo.Notebook = function(canvas) {
   if (typeof(canvas) == "string") {
     canvas = document.getElementById(canvas);
   }
 
   this.canvas = canvas;
+  this.dpi = wunjo.Notebook.getDPI();
   this.currentStroke = null;
   this.currentPage = null;
 
@@ -77,6 +69,18 @@ wunjo.Notebook = function(canvas) {
     }
   }, false);
 };
+wunjo.Notebook.getDPI = function() {
+  if (this.DPI == undefined) {
+    var dpiTest = document.body.appendChild(
+      document.createElement('div')
+    );
+    dpiTest.style.width = '1in';
+    this.DPI = dpiTest.offsetWidth;
+    document.body.removeChild(dpiTest);
+  }
+  return this.DPI;
+};
+
 wunjo.Notebook.prototype.getStorage = function() {
   return window.localStorage;
 };
