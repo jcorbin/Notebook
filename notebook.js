@@ -80,7 +80,7 @@ wunjo.Notebook = function(canvas) {
       self.redraw();
     }
   }, false);
-}
+};
 wunjo.Notebook.prototype.getStorage = function() {
   return window.localStorage;
 };
