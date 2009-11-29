@@ -29,7 +29,7 @@
 
       var nb = null;
       window.onload = function() {
-        nb = new Notebook('c');
+        nb = new wunjo.Notebook('c');
 
         // Create toolbar
         var tb = new goog.ui.Toolbar();
@@ -37,7 +37,7 @@
 
         // Build paper type meun
         var pt = tb.getChild('paperType');
-        for (var i=0, l=Notebook.Page.paperTypes; i<l.length; i++) {
+        for (var i=0, l=wunjo.Notebook.Page.paperTypes; i<l.length; i++) {
           var title = l[i][0].toUpperCase()+l[i].substr(1);
           var opt = new goog.ui.Option(title, l[i]);
           pt.addItem(opt);

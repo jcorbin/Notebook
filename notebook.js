@@ -1,15 +1,15 @@
-var Notebook = (function () {
+goog.provide('wunjo.Notebook');
 
 document.addEventListener('DOMContentLoaded', function() {
   var dpiTest = document.body.appendChild(
     document.createElement('div')
   );
   dpiTest.style.width = '1in';
-  Notebook.prototype.dpi = dpiTest.offsetWidth;
+  wunjo.Notebook.prototype.dpi = dpiTest.offsetWidth;
   document.body.removeChild(dpiTest);
 }, false);
 
-function Notebook(canvas) {
+wunjo.Notebook = function(canvas) {
   if (typeof(canvas) == "string") {
     canvas = document.getElementById(canvas);
   }
@@ -19,7 +19,7 @@ function Notebook(canvas) {
   this.currentPage = null;
 
   if (! this.restore()) {
-    this.currentPage = new Notebook.Page(8.5*this.dpi, 11*this.dpi);
+    this.currentPage = new wunjo.Notebook.Page(8.5*this.dpi, 11*this.dpi);
   }
 
   this.canvas.width = this.currentPage.width;
@@ -81,16 +81,16 @@ function Notebook(canvas) {
     }
   }, false);
 }
-Notebook.prototype.getStorage = function() {
+wunjo.Notebook.prototype.getStorage = function() {
   return window.localStorage;
 };
-Notebook.prototype.save = function() {
+wunjo.Notebook.prototype.save = function() {
   var data = this.currentPage.serialize();
   this.currentPage.mtime = (new Date()).getTime();
   data.mtime = this.currentPage.mtime;
   this.getStorage()['currentPage'] = JSON.stringify(data);
 };
-Notebook.prototype.restore = function(data) {
+wunjo.Notebook.prototype.restore = function(data) {
   var stor = null;
   if (data == undefined) {
     stor = this.getStorage();
@@ -100,7 +100,7 @@ Notebook.prototype.restore = function(data) {
     try {
       data = JSON.parse(data);
       if (! this.currentPage || data.mtime > this.currentPage.mtime) {
-        this.currentPage = Notebook.Page.unserialize(data);
+        this.currentPage = wunjo.Notebook.Page.unserialize(data);
         this.currentPage.mtime = data.mtime;
         return true;
       } else {
@@ -116,9 +116,9 @@ Notebook.prototype.restore = function(data) {
   }
   return false;
 };
-Notebook.prototype.startStroke = function(x, y) {
+wunjo.Notebook.prototype.startStroke = function(x, y) {
   this.currentStroke = this.currentPage.addStroke(
-    new Notebook.Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
+    new wunjo.Notebook.Stroke(3, 'rgba(0, 0, 0, 0.7)', x, y)
   );
   var ctx = this.canvas.getContext('2d'),
     width = this.currentStroke.width, half = width/2;
@@ -126,44 +126,44 @@ Notebook.prototype.startStroke = function(x, y) {
   ctx.beginPath();
   ctx.moveTo(x, y);
 };
-Notebook.prototype.updateStroke = function(x, y) {
+wunjo.Notebook.prototype.updateStroke = function(x, y) {
   if (! this.currentStroke) return;
   var ctx = this.canvas.getContext('2d');
   this.currentStroke.addPoint(x, y);
   ctx.lineTo(x, y);
   ctx.stroke();
 };
-Notebook.prototype.finishStroke = function() {
+wunjo.Notebook.prototype.finishStroke = function() {
   if (! this.currentStroke) return;
   this.save();
   this.currentStroke = null;
   this.redraw();
 };
-Notebook.prototype.redraw = function() {
+wunjo.Notebook.prototype.redraw = function() {
   this.canvas.width = this.canvas.width;
   this.draw();
 };
-Notebook.prototype.draw = function() {
+wunjo.Notebook.prototype.draw = function() {
   this.currentPage.draw(this);
 };
-Notebook.prototype.clearPage = function() {
+wunjo.Notebook.prototype.clearPage = function() {
   if (! this.currentPage) return;
   this.currentPage.clear();
   this.save();
   this.redraw();
 };
-Notebook.prototype.setPaper = function(paper) {
+wunjo.Notebook.prototype.setPaper = function(paper) {
   this.currentPage.options.paper = paper;
   this.save();
   this.redraw();
 };
 /*
-Notebook.prototype.updateSize = function(win) {
+wunjo.Notebook.prototype.updateSize = function(win) {
   this.canvas.width = this.canvas.parentNode.clientWidth;
   this.canvas.height = this.canvas.parentNode.clientHeight-4;
   this.draw();
 };
-Notebook.prototype.onWindowResize = function(evt) {
+wunjo.Notebook.prototype.onWindowResize = function(evt) {
   var win = evt.srcElement;
   if (this.resizeTimeout) {
     win.clearTimeout(this.resizeTimeout);
@@ -177,24 +177,24 @@ Notebook.prototype.onWindowResize = function(evt) {
 };
 */
 
-Notebook.Page = function(width, height, options) {
+wunjo.Notebook.Page = function(width, height, options) {
   this.width = width;
   this.height = height;
   this.options = options || {};
   this.options.paper = this.options.paper || 'ruled';
   this.strokes = [];
 };
-Notebook.Page.paperTypes = ['blank', 'ruled', 'lined', 'grid'];
-Notebook.Page.unserialize = function(data) {
-  var page = new Notebook.Page(data.width, data.height, data.options);
+wunjo.Notebook.Page.paperTypes = ['blank', 'ruled', 'lined', 'grid'];
+wunjo.Notebook.Page.unserialize = function(data) {
+  var page = new wunjo.Notebook.Page(data.width, data.height, data.options);
   if (data.strokes) {
     for (var i=0; i<data.strokes.length; i++) {
-      page.strokes.push(Notebook.Stroke.unserialize(data.strokes[i]));
+      page.strokes.push(wunjo.Notebook.Stroke.unserialize(data.strokes[i]));
     }
   }
   return page;
 };
-Notebook.Page.prototype.serialize = function() {
+wunjo.Notebook.Page.prototype.serialize = function() {
   var data = {
     width: this.width,
     height: this.height,
@@ -206,7 +206,7 @@ Notebook.Page.prototype.serialize = function() {
   }
   return data;
 };
-Notebook.Page.prototype.draw = function(nb) {
+wunjo.Notebook.Page.prototype.draw = function(nb) {
   if (typeof(this.options.paper) == "function") {
     this.options.paper(this, nb);
   } else {
@@ -218,7 +218,7 @@ Notebook.Page.prototype.draw = function(nb) {
     this.strokes[i].draw(nb);
   }
 };
-Notebook.Page.prototype.drawPaper = function(nb) {
+wunjo.Notebook.Page.prototype.drawPaper = function(nb) {
   if (this.options.paper == "blank") return;
 
   var ctx = nb.canvas.getContext('2d');
@@ -247,16 +247,16 @@ Notebook.Page.prototype.drawPaper = function(nb) {
       break;
   }
 };
-Notebook.Page.prototype.addStroke = function(stroke) {
+wunjo.Notebook.Page.prototype.addStroke = function(stroke) {
   this.strokes.push(stroke);
   return stroke;
 };
-Notebook.Page.prototype.clear = function() {
+wunjo.Notebook.Page.prototype.clear = function() {
   this.strokes = [];
 };
 
 
-Notebook.Stroke = function(width, color, startX, startY) {
+wunjo.Notebook.Stroke = function(width, color, startX, startY) {
   this.color = color;
   this.width = width;
   this.points = [];
@@ -264,8 +264,8 @@ Notebook.Stroke = function(width, color, startX, startY) {
     this.addPoint(startX, startY);
   }
 };
-Notebook.Stroke.unserialize = function(data) {
-  var stroke = new Notebook.Stroke(data.width, data.color);
+wunjo.Notebook.Stroke.unserialize = function(data) {
+  var stroke = new wunjo.Notebook.Stroke(data.width, data.color);
   if (data.points) {
     for (var i=0, l=data.points; i<l.length; i++) {
       stroke.points.push([l[i][0], l[i][1]]);
@@ -273,7 +273,7 @@ Notebook.Stroke.unserialize = function(data) {
   }
   return stroke;
 };
-Notebook.Stroke.prototype.serialize = function() {
+wunjo.Notebook.Stroke.prototype.serialize = function() {
   var data = {
     color: this.color,
     width: this.width,
@@ -284,10 +284,10 @@ Notebook.Stroke.prototype.serialize = function() {
   }
   return data;
 };
-Notebook.Stroke.prototype.addPoint = function(x, y) {
+wunjo.Notebook.Stroke.prototype.addPoint = function(x, y) {
   this.points.push([x, y]);
 };
-Notebook.Stroke.prototype.draw = function(nb) {
+wunjo.Notebook.Stroke.prototype.draw = function(nb) {
   if (this.points.length <= 1) return;
   ctx = nb.canvas.getContext('2d');
   ctx.strokeStyle = this.color;
@@ -300,8 +300,5 @@ Notebook.Stroke.prototype.draw = function(nb) {
   }
   ctx.stroke();
 };
-
-return Notebook;
-})();
 
 // vim:set ts=2 sw=2 expandtab:
