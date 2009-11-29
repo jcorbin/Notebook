@@ -1,0 +1,9 @@
+Uses Google Closure library from http://code.google.com/closure
+
+Closure in this notebook source tree should be a symlink to the closure
+subdirectory of a checkout of closure-library trunk.
+
+For example, what I did:
+  % cd .. svn checkout http://closure-library.googlecode.com/svn/trunk/ closure-library
+  % cd notebook
+  % ln -s ../closure-library/closure closure
