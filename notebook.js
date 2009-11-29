@@ -26,11 +26,7 @@ wunjo.Notebook = function(canvas) {
   this.canvas.height = this.currentPage.height;
   this.draw();
 
-  // var win = this.canvas.ownerDocument.defaultView;
-  // this.updateSize(win);
-
   var self = this, listening = false;
-  // win.addEventListener('resize', function(evt) {self.onWindowResize(evt)});
   function listen() {
     if (listening) return true;
     self.canvas.addEventListener('mousemove', stroke, false);
@@ -157,25 +153,7 @@ wunjo.Notebook.prototype.setPaper = function(paper) {
   this.save();
   this.redraw();
 };
-/*
-wunjo.Notebook.prototype.updateSize = function(win) {
-  this.canvas.width = this.canvas.parentNode.clientWidth;
-  this.canvas.height = this.canvas.parentNode.clientHeight-4;
-  this.draw();
-};
-wunjo.Notebook.prototype.onWindowResize = function(evt) {
-  var win = evt.srcElement;
-  if (this.resizeTimeout) {
-    win.clearTimeout(this.resizeTimeout);
-  }
-  var self = this;
-  this.resizeTimeout = win.setTimeout(function() {
-    delete self.resizeTimeout;
-    console.log('update');
-    self.updateSize(win);
-  }, 100);
-};
-*/
+
 
 wunjo.Notebook.Page = function(width, height, options) {
   this.width = width;
