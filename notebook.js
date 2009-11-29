@@ -3,9 +3,10 @@ goog.provide('wunjo.Notebook');
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 
-wunjo.Notebook.Page = function(width, height, options) {
+wunjo.Notebook.Page = function(title, width, height, options) {
   goog.events.EventTarget.call(this);
 
+  this.title_ = title;
   this.width_ = width;
   this.height_ = height;
   this.options = options || {};
@@ -16,7 +17,7 @@ goog.inherits(wunjo.Notebook.Page, goog.events.EventTarget);
 wunjo.Notebook.Page.paperTypes = ['blank', 'ruled', 'lined', 'grid'];
 
 wunjo.Notebook.Page.unserialize = function(data) {
-  var page = new wunjo.Notebook.Page(data.width, data.height, data.options);
+  var page = new wunjo.Notebook.Page(data.title, data.width, data.height, data.options);
   if (data.layers) {
     var layers = [];
     for (var i=0; i<data.layers.length; i++) {
@@ -35,6 +36,7 @@ wunjo.Notebook.Page.prototype.layers_ = null;
 
 wunjo.Notebook.Page.prototype.serialize = function() {
   var data = {
+    title: this.title_,
     width: this.width_,
     height: this.height_,
     options: this.options
@@ -55,6 +57,18 @@ wunjo.Notebook.Page.prototype.disposeInternal = function() {
     }
     this.layers_ = null;
   }
+};
+
+wunjo.Notebook.Page.prototype.getTitle = function() {
+  return this.title_;
+};
+
+wunjo.Notebook.Page.prototype.setTitle = function(title) {
+  this.title_ = title;
+  this.dispatchEvent({
+    type: 'titlechanged',
+    value: title
+  });
 };
 
 wunjo.Notebook.Page.prototype.getSize = function() {
