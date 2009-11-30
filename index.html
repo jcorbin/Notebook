@@ -6,19 +6,33 @@
       html, body {
         margin: 0;
         padding: 0;
+        height: 100%;
       }
-      canvas {
+
+      .wunjo-notebookeditor {
+        height: 99%;
         border: 1px solid #999;
+      }
+
+      .wunjo-drawingarea {
       }
     </style>
     <script language="JavaScript" src="closure/goog/base.js"></script>
+    <script language="JavaScript">
+      goog.require('goog.ui.Component');
+    </script>
+    <script language="JavaScript" src="drawingarea.js"></script>
     <script language="JavaScript" src="notebook.js"></script>
+    <script language="JavaScript" src="notebookeditor.js"></script>
   </head>
   <body>
 
-    <div>
-      <a target="_blank" href="http://github.com/jcorbin/Notebook">http://github.com/jcorbin/Notebook</a>
-    </div>
+    <script>(function() {
+      var nbe = new wunjo.NotebookEditor();
+      nbe.render();
+      var nb = nbe.setNotebook(new wunjo.Notebook('Untitled'));
+      nb.addPage(new wunjo.Notebook.Page(null, 400, 300));
+    })()</script>
 
   </body>
 </html>
