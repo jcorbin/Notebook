@@ -4,36 +4,57 @@ goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 
 wunjo.Notebook.Page = function(width, height, options) {
+  goog.events.EventTarget.call(this);
+
   this.width_ = width;
   this.height_ = height;
   this.options = options || {};
   this.options.paper = this.options.paper || 'ruled';
-  this.strokes = [];
 };
+goog.inherits(wunjo.Notebook.Page, goog.events.EventTarget);
 
 wunjo.Notebook.Page.paperTypes = ['blank', 'ruled', 'lined', 'grid'];
 
 wunjo.Notebook.Page.unserialize = function(data) {
   var page = new wunjo.Notebook.Page(data.width, data.height, data.options);
-  if (data.strokes) {
-    for (var i=0; i<data.strokes.length; i++) {
-      page.strokes.push(wunjo.Notebook.Stroke.unserialize(data.strokes[i]));
+  if (data.layers) {
+    var layers = [];
+    for (var i=0; i<data.layers.length; i++) {
+      layers.push(
+        wunjo.Notebook.Layer.unserialize(data.layers[i])
+      );
+    }
+    if (layers.length) {
+      page.layers_ = layers;
     }
   }
   return page;
 };
 
+wunjo.Notebook.Page.prototype.layers_ = null;
+
 wunjo.Notebook.Page.prototype.serialize = function() {
   var data = {
     width: this.width_,
     height: this.height_,
-    options: this.options,
-    strokes: []
+    options: this.options
   };
-  for (var i=0; i<this.strokes.length; i++) {
-    data.strokes.push(this.strokes[i].serialize());
+  if (this.layers_) {
+    data.layers = []
+    for (var i=0; i<this.layers_.length; i++) {
+      data.layers.push(this.layers_[i].serialize());
+    }
   }
   return data;
+};
+
+wunjo.Notebook.Page.prototype.disposeInternal = function() {
+  if (this.layers_) {
+    for (var i=0; i<this.layers_.length; i++) {
+      this.layers_[i].dispose();
+    }
+    this.layers_ = null;
+  }
 };
 
 wunjo.Notebook.Page.prototype.getSize = function() {
@@ -56,9 +77,11 @@ wunjo.Notebook.Page.prototype.draw = function(canvas) {
     this.drawPaper(canvas);
   }
 
-  // Draw strokes
-  for (var i=0; i<this.strokes.length; i++) {
-    this.strokes[i].draw(canvas);
+  // Draw layers
+  if (this.layers_) {
+    for (var i=0; i<this.layers_.length; i++) {
+      this.layers_[i].draw(canvas);
+    }
   }
 };
 
@@ -92,13 +115,61 @@ wunjo.Notebook.Page.prototype.drawPaper = function(canvas) {
   }
 };
 
-wunjo.Notebook.Page.prototype.addStroke = function(stroke) {
-  this.strokes.push(stroke);
-  return stroke;
+wunjo.Notebook.Page.prototype.getLayerCount = function() {
+  if (! this.layers_) return 0;
+  return this.layers_.length;
+};
+
+wunjo.Notebook.Page.prototype.getLayer = function(i) {
+  if (! this.layers_) return null;
+  return this.layers_[i];
+};
+
+wunjo.Notebook.Page.prototype.getLayers = function() {
+  if (! this.layers_) return null;
+  return goog.array.clone(this.layers_);
 };
 
 wunjo.Notebook.Page.prototype.clear = function() {
-  this.strokes = [];
+  while (this.layers_.length) {
+    this.removeLayer(this.layers_[0]);
+  }
+  this.layers_ = null;
+};
+
+wunjo.Notebook.Page.prototype.addLayer = function(layer) {
+  if (! this.layers_) {
+    this.layers_ = [];
+  }
+  goog.array.insert(this.layers_, layer);
+  this.dispatchEvent({
+    type: 'layeradded',
+    layer: layer
+  });
+  return layer;
+};
+
+wunjo.Notebook.Page.prototype.addLayerAt = function(layer, i) {
+  if (! this.layers_) {
+    this.layers_ = [];
+  }
+  goog.array.insertAt(this.layers_, layer, i);
+  this.dispatchEvent({
+    type: 'layeradded',
+    layer: layer
+  });
+  return layer;
+};
+
+wunjo.Notebook.Page.prototype.removeLayer = function(layer) {
+  goog.array.remove(this.layers_, layer);
+  if (! this.layers_.length) {
+    this.layers_ = null;
+  }
+  this.dispatchEvent({
+    type: 'layerremoved',
+    layer: layer
+  });
 };
 
 
