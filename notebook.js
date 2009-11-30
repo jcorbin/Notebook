@@ -3,8 +3,8 @@ goog.provide('wunjo.Notebook');
 goog.require('goog.array');
 
 wunjo.Notebook.Page = function(width, height, options) {
-  this.width = width;
-  this.height = height;
+  this.width_ = width;
+  this.height_ = height;
   this.options = options || {};
   this.options.paper = this.options.paper || 'ruled';
   this.strokes = [];
@@ -24,8 +24,8 @@ wunjo.Notebook.Page.unserialize = function(data) {
 
 wunjo.Notebook.Page.prototype.serialize = function() {
   var data = {
-    width: this.width,
-    height: this.height,
+    width: this.width_,
+    height: this.height_,
     options: this.options,
     strokes: []
   };
@@ -33,6 +33,19 @@ wunjo.Notebook.Page.prototype.serialize = function() {
     data.strokes.push(this.strokes[i].serialize());
   }
   return data;
+};
+
+wunjo.Notebook.Page.prototype.getSize = function() {
+  return [this.width_, this.height_];
+};
+
+wunjo.Notebook.Page.prototype.setSize = function(width, height) {
+  this.width_ = width;
+  this.height_ = height;
+  this.dispatchEvent({
+    type: 'resize',
+    value: this.getSize()
+  });
 };
 
 wunjo.Notebook.Page.prototype.draw = function(canvas) {
