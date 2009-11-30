@@ -7,7 +7,9 @@ wunjo.Notebook.Page = function(width, height, options) {
   this.options.paper = this.options.paper || 'ruled';
   this.strokes = [];
 };
+
 wunjo.Notebook.Page.paperTypes = ['blank', 'ruled', 'lined', 'grid'];
+
 wunjo.Notebook.Page.unserialize = function(data) {
   var page = new wunjo.Notebook.Page(data.width, data.height, data.options);
   if (data.strokes) {
@@ -17,6 +19,7 @@ wunjo.Notebook.Page.unserialize = function(data) {
   }
   return page;
 };
+
 wunjo.Notebook.Page.prototype.serialize = function() {
   var data = {
     width: this.width,
@@ -29,6 +32,7 @@ wunjo.Notebook.Page.prototype.serialize = function() {
   }
   return data;
 };
+
 wunjo.Notebook.Page.prototype.draw = function(canvas) {
   if (typeof(this.options.paper) == "function") {
     this.options.paper(this, canvas);
@@ -41,6 +45,7 @@ wunjo.Notebook.Page.prototype.draw = function(canvas) {
     this.strokes[i].draw(canvas);
   }
 };
+
 wunjo.Notebook.Page.prototype.drawPaper = function(canvas) {
   if (this.options.paper == "blank") return;
 
@@ -70,10 +75,12 @@ wunjo.Notebook.Page.prototype.drawPaper = function(canvas) {
       break;
   }
 };
+
 wunjo.Notebook.Page.prototype.addStroke = function(stroke) {
   this.strokes.push(stroke);
   return stroke;
 };
+
 wunjo.Notebook.Page.prototype.clear = function() {
   this.strokes = [];
 };
@@ -87,6 +94,7 @@ wunjo.Notebook.Stroke = function(width, color, startX, startY) {
     this.addPoint(startX, startY);
   }
 };
+
 wunjo.Notebook.Stroke.unserialize = function(data) {
   var stroke = new wunjo.Notebook.Stroke(data.width, data.color);
   if (data.points) {
@@ -96,6 +104,7 @@ wunjo.Notebook.Stroke.unserialize = function(data) {
   }
   return stroke;
 };
+
 wunjo.Notebook.Stroke.prototype.serialize = function() {
   var data = {
     color: this.color,
@@ -107,9 +116,11 @@ wunjo.Notebook.Stroke.prototype.serialize = function() {
   }
   return data;
 };
+
 wunjo.Notebook.Stroke.prototype.addPoint = function(x, y) {
   this.points.push([x, y]);
 };
+
 wunjo.Notebook.Stroke.prototype.draw = function(canvas) {
   if (this.points.length <= 1) return;
   ctx = canvas.getContext('2d');
