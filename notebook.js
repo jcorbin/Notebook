@@ -3,6 +3,115 @@ goog.provide('wunjo.Notebook');
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 
+wunjo.Notebook = function(title, options) {
+  goog.events.EventTarget.call(this);
+
+  this.title = title;
+  this.options = options || {};
+};
+goog.inherits(wunjo.Notebook, goog.events.EventTarget);
+
+wunjo.Notebook.prototype.pages_ = null;
+
+wunjo.Notebook.prototype.disposeInternal = function() {
+  if (this.pages_) {
+    for (var i=0; i<this.pages_.length; i++) {
+      this.pages_[i].dispose();
+    }
+    this.pages_ = null;
+  }
+};
+
+wunjo.Notebook.unserialize = function(data) {
+  var notebook = new Notebook(data.title, data.options);
+  if (data.pages) {
+    var pages = [];
+    for (var i=0; i<data.pages.length; i++) {
+      pages.push(
+        wunjo.Notebook.Page.unserialize(data.pages[i])
+      );
+    }
+    if (pages.length) {
+      notebook.pages_ = pages;
+    }
+  }
+};
+
+wunjo.Notebook.prototype.serialize = function() {
+  var data = {
+    title: this.title,
+    options: this.options
+  };
+  if (this.pages_) {
+    data.pages = [];
+    for (var i=0; i<this.pages_.length; i++) {
+      data.pages.push(this.pages_[i].serialize());
+    }
+  }
+  return data;
+};
+
+wunjo.Notebook.prototype.getPageCount = function() {
+  if (! this.pages_) return 0;
+  return this.pages_.length;
+};
+
+wunjo.Notebook.prototype.getPage = function(i) {
+  if (! this.pages_) return null;
+  return this.pages_[i];
+};
+
+wunjo.Notebook.prototype.getPages = function() {
+  if (! this.pages_) return null;
+  return goog.array.clone(this.pages_);
+};
+
+wunjo.Notebook.prototype.clear = function() {
+  while (this.pages_.length) {
+    this.removePage(this.pages_[0]);
+  }
+  this.pages_ = null;
+};
+
+wunjo.Notebook.prototype.addPage = function(page) {
+  if (! this.pages_) {
+    this.pages_ = [];
+  }
+  goog.array.insert(this.pages_, page);
+  this.dispatchEvent({
+    type: 'pageadded',
+    page: page
+  });
+  return page;
+};
+
+wunjo.Notebook.prototype.addPageAt = function(page, i) {
+  if (! this.pages_) {
+    this.pages_ = [];
+  }
+  goog.array.insertAt(this.pages_, page, i);
+  this.dispatchEvent({
+    type: 'pageadded',
+    page: page
+  });
+  return page;
+};
+
+wunjo.Notebook.prototype.removePage = function(page) {
+  var i = goog.array.indexOf(this.pages_, page);
+  if (i < 0) return;
+  goog.array.remove(this.pages_, page);
+  if (! this.pages_.length) {
+    this.pages_ = null;
+  }
+  this.dispatchEvent({
+    type: 'pageremoved',
+    page: page,
+    index: i
+  });
+};
+
+
 wunjo.Notebook.Page = function(title, width, height, options) {
   goog.events.EventTarget.call(this);
 
