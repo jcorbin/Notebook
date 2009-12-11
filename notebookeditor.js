@@ -206,11 +206,12 @@ wunjo.NotebookEditor.prototype.onWindowResize_ = function() {
     win.clearTimeout(this.resizeTo_);
     delete this.resizeTo_;
   }
+
   this.updateSize_();
   var self = this;
   this.resizeTo_ = win.setTimeout(function() {
     delete self.resizeTo_;
-    self.draw_(this.getCanvas());
+    self.draw_(self.getCanvas());
   }, 100);
 };
 
