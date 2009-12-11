@@ -32,8 +32,14 @@ wunjo.NotebookEditor.prototype.autosizing_ = null;
 wunjo.NotebookEditor.prototype.nbeh_ = null;
 wunjo.NotebookEditor.prototype.pgeh_ = null;
 wunjo.NotebookEditor.prototype.curPage_ = null;
+wunjo.NotebookEditor.prototype.dsize_ = null;
 
 wunjo.NotebookEditor.prototype.enterDocument = function() {
+  var elt = this.getElement();
+  this.dsize_ = [
+    elt.offsetWidth - elt.clientWidth,
+    elt.offsetHeight - elt.clientHeight
+  ];
   wunjo.NotebookEditor.superClass_.enterDocument.call(this);
   this.getCanvas().dpi = wunjo.NotebookEditor.getDPI();
   this.getHandler().listen(
@@ -176,7 +182,10 @@ wunjo.NotebookEditor.prototype.getAvailableArea = function() {
   if (elt.tagName.toLowerCase() == 'canvas') {
     throw Error('No container');
   }
-  return [elt.clientWidth, Math.floor(elt.clientHeight*0.99)];
+  return [
+    elt.offsetWidth - this.dsize_[0],
+    elt.offsetHeight - this.dsize_[1]
+  ];
 };
 
 wunjo.NotebookEditor.prototype.setAutosize_ = function(minSize) {
