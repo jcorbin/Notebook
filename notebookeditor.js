@@ -194,20 +194,23 @@ wunjo.NotebookEditor.prototype.updateSize_ = function() {
 };
 
 wunjo.NotebookEditor.prototype.onWindowResize_ = function() {
-  var win = this.dom_.getWindow();
-  if (this.resizeTo_) {
-    win.clearTimeout(this.resizeTo_);
-    delete this.resizeTo_;
-  }
-
   if (this.autosizing_) {
     this.updateSize_();
-    var self = this;
-    this.resizeTo_ = win.setTimeout(function() {
-      delete self.resizeTo_;
-      self.draw_(self.getCanvas());
-    }, 100);
+    this.delayRedraw();
   }
+};
+
+wunjo.NotebookEditor.prototype.delayRedraw = function() {
+  var win = this.dom_.getWindow();
+  if (this.redrawTo_) {
+    win.clearTimeout(this.redrawTo_);
+    delete this.redrawTo_;
+  }
+  var self = this;
+  this.redrawTo_ = win.setTimeout(function() {
+    delete self.redrawTo_;
+    self.draw_(self.getCanvas());
+  }, 100);
 };
 
 wunjo.NotebookEditor.prototype.draw_ = function(canvas) {
