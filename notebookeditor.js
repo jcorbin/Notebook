@@ -81,8 +81,7 @@ wunjo.NotebookEditor.prototype.setNotebook = function(nb) {
 
 wunjo.NotebookEditor.prototype.hookupNotebook_ = function() {
   if (this.nbeh_) {
-    this.nbeh_.removeAll();
-    this.nbeh_ = null;
+    this.nbeh_.dispose();
   }
   this.nbeh_ = new goog.events.EventHandler(this);
   this.nbeh_.listen(this.notebook_, 'pageadded', this.onPageAdded_);
