@@ -30,6 +30,7 @@ wunjo.NotebookEditor.prototype.notebook_ = null;
 wunjo.NotebookEditor.prototype.message_ = null;
 wunjo.NotebookEditor.prototype.autosizing_ = null;
 wunjo.NotebookEditor.prototype.nbeh_ = null;
+wunjo.NotebookEditor.prototype.pgeh_ = null;
 wunjo.NotebookEditor.prototype.curPage_ = null;
 
 wunjo.NotebookEditor.prototype.enterDocument = function() {
@@ -125,7 +126,11 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
   if (this.autosizing_) {
     this.autosizing_ = null;
   }
+  if (this.pgeh_) {
+    this.pgeh_.dispose();
+  }
   this.curPage_ = page;
+  this.pgeh_ = new goog.events.EventHandler(this);
   this.dispatchEvent({
     type: 'currentpagechanged',
     notebook: this.notebook_,
