@@ -137,10 +137,7 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
     page: page
   });
 
-  var canvas = this.getCanvas(), size = this.curPage_.getSize();
-  canvas.width = size[0];
-  canvas.height = size[1];
-  this.draw_(canvas);
+  this.updatePageSize_(this.curPage_.getSize());
 };
 
 wunjo.NotebookEditor.prototype.getCurrentPage = function(page) {
@@ -204,6 +201,13 @@ wunjo.NotebookEditor.prototype.onWindowResize_ = function() {
     this.updateSize_();
     this.delayRedraw();
   }
+};
+
+wunjo.NotebookEditor.prototype.updatePageSize_ = function(size) {
+  var canvas = this.getCanvas();
+  canvas.width = size[0];
+  canvas.height = size[1];
+  this.draw_(this.getCanvas());
 };
 
 wunjo.NotebookEditor.prototype.delayRedraw = function() {
