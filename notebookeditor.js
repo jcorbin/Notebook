@@ -178,18 +178,19 @@ wunjo.NotebookEditor.prototype.setAutosize_ = function(minSize) {
 };
 
 wunjo.NotebookEditor.prototype.updateSize_ = function() {
-  var
-    size = this.getAvailableArea(),
-    canvas = this.getCanvas();
-  size = [
-    Math.max(size[0], this.autosizing_[0]),
-    Math.max(size[1], this.autosizing_[1])
-  ];
-  if (canvas.width != size[0]) {
-    canvas.width = size[0];
-  }
-  if (canvas.height != size[1]) {
-    canvas.height = size[1];
+  var size = this.getAvailableArea();
+  if (this.autosizing_) {
+    size = [
+      Math.max(size[0], this.autosizing_[0]),
+      Math.max(size[1], this.autosizing_[1])
+    ];
+    var canvas = this.getCanvas();
+    if (canvas.width != size[0]) {
+      canvas.width = size[0];
+    }
+    if (canvas.height != size[1]) {
+      canvas.height = size[1];
+    }
   }
 };
 
