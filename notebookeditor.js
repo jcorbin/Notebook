@@ -170,18 +170,9 @@ wunjo.NotebookEditor.prototype.getAvailableArea = function() {
   return [elt.clientWidth, Math.floor(elt.clientHeight*0.99)];
 };
 
-wunjo.NotebookEditor.prototype.initAutosize_ = function(minSize) {
+wunjo.NotebookEditor.prototype.setAutosize_ = function(minSize) {
   this.autosizing_ = minSize;
   this.updateSize_();
-};
-
-wunjo.NotebookEditor.prototype.setAutosize_ = function(minSize) {
-  if (this.autosizing_) {
-    this.autosizing_ = minSize;
-    this.updateSize_();
-  } else {
-    this.initAutosize_(minSize);
-  }
 };
 
 wunjo.NotebookEditor.prototype.updateSize_ = function() {
