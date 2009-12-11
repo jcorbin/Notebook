@@ -123,6 +123,9 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
     this.message_ = null;
     this.enabled = true;
   }
+  if (this.autosizing_) {
+    this.autosizing_ = null;
+  }
   this.curPage_ = page;
   this.dispatchEvent({
     type: 'currentpagechanged',
