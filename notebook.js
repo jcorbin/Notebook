@@ -193,6 +193,16 @@ wunjo.Notebook.Page.prototype.setSize = function(width, height) {
   });
 };
 
+wunjo.Notebook.Page.prototype.updateSize = function(size) {
+  if (this.options.minsize) {
+    size = [
+      Math.max(size[0], this.options.minsize[0]),
+      Math.max(size[1], this.options.minsize[1])
+    ];
+  }
+  this.setSize(size[0], size[1]);
+};
+
 wunjo.Notebook.Page.prototype.draw = function(canvas) {
   if (typeof(this.options.paper) == "function") {
     this.options.paper(this, canvas);
