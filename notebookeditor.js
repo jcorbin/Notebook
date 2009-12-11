@@ -35,6 +35,10 @@ wunjo.NotebookEditor.prototype.curPage_ = null;
 wunjo.NotebookEditor.prototype.enterDocument = function() {
   wunjo.NotebookEditor.superClass_.enterDocument.call(this);
   this.getCanvas().dpi = wunjo.NotebookEditor.getDPI();
+  this.eh_.listen(
+    this.dom_.getWindow(), goog.events.EventType.RESIZE,
+    this.onWindowResize_
+  );
 };
 
 wunjo.NotebookEditor.prototype.getNotebook = function() {
@@ -168,10 +172,6 @@ wunjo.NotebookEditor.prototype.getAvailableArea = function() {
 
 wunjo.NotebookEditor.prototype.initAutosize_ = function(minSize) {
   this.autosizing_ = minSize;
-  this.eh_.listen(
-    this.dom_.getWindow(), goog.events.EventType.RESIZE,
-    this.onWindowResize_
-  );
   this.updateSize_();
 };
 
