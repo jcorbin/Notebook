@@ -11,8 +11,6 @@ goog.require('goog.ui.Component');
 wunjo.DrawingArea = function(opt_domHelper) {
   goog.ui.Component.call(this, opt_domHelper);
 
-  this.eh_ = new goog.events.EventHandler(this);
-
   this.pen_ = {color: 'rgba(128, 0, 0, 0.5)', size: 5};
 };
 goog.inherits(wunjo.DrawingArea, goog.ui.Component);
@@ -59,7 +57,7 @@ wunjo.DrawingArea.prototype.createDom = function() {
 
 wunjo.DrawingArea.prototype.enterDocument = function() {
   wunjo.DrawingArea.superClass_.enterDocument.call(this);
-  this.eh_.listen(
+  this.getHandler().listen(
     this.getElement(), goog.events.EventType.MOUSEDOWN,
     this.onMouseDown_
   );
@@ -68,7 +66,6 @@ wunjo.DrawingArea.prototype.enterDocument = function() {
 
 wunjo.DrawingArea.prototype.exitDocument = function() {
   wunjo.DrawingArea.superClass_.exitDocument.call(this);
-  this.eh_.removeAll();
   this.last_ = null;
   this.points_ = null;
 };
@@ -114,19 +111,19 @@ wunjo.DrawingArea.prototype.draw_ = function(canvas) {
 };
 
 wunjo.DrawingArea.prototype.cleanupStroke_ = function() {
-  var elt = this.getElement();
-  this.eh_.unlisten(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
-  this.eh_.unlisten(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
-  this.eh_.unlisten(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
+  var elt = this.getElement(), hndl = this.getHandler();
+  hndl.unlisten(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
+  hndl.unlisten(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
+  hndl.unlisten(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
   this.last_ = null;
   this.points_ = null;
 };
 
 wunjo.DrawingArea.prototype.startStroke_ = function(x, y) {
-  var elt = this.getElement();
-  this.eh_.listen(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
-  this.eh_.listen(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
-  this.eh_.listen(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
+  var elt = this.getElement(), hndl = this.getHandler();
+  hndl.listen(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
+  hndl.listen(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
+  hndl.listen(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
   this.points_ = [];
   this.last_ = [x, y];
   this.points_.push(this.last_);
