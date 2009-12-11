@@ -131,13 +131,18 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
   }
   this.curPage_ = page;
   this.pgeh_ = new goog.events.EventHandler(this);
+  this.pgeh_.listen(this.curPage_, 'resize', this.onPageResize_);
+  if (this.curPage_.options.autosize) {
+    this.updateSize_();
+  } else {
+    this.updatePageSize_(this.curPage_.getSize());
+  }
+
   this.dispatchEvent({
     type: 'currentpagechanged',
     notebook: this.notebook_,
     page: page
   });
-
-  this.updatePageSize_(this.curPage_.getSize());
 };
 
 wunjo.NotebookEditor.prototype.getCurrentPage = function(page) {
@@ -193,6 +198,8 @@ wunjo.NotebookEditor.prototype.updateSize_ = function() {
     if (canvas.height != size[1]) {
       canvas.height = size[1];
     }
+  } else if (this.curPage_ && this.curPage_.options.autosize) {
+    this.curPage_.updateSize(size);
   }
 };
 
@@ -200,7 +207,13 @@ wunjo.NotebookEditor.prototype.onWindowResize_ = function() {
   if (this.autosizing_) {
     this.updateSize_();
     this.delayRedraw();
+  } else if (this.curPage_ && this.curPage_.options.autosize) {
+    this.curPage_.updateSize(this.getAvailableArea());
   }
+};
+
+wunjo.NotebookEditor.prototype.onPageResize_ = function(evt) {
+  this.updatePageSize_(evt.value);
 };
 
 wunjo.NotebookEditor.prototype.updatePageSize_ = function(size) {
