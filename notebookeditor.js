@@ -207,12 +207,14 @@ wunjo.NotebookEditor.prototype.onWindowResize_ = function() {
     delete this.resizeTo_;
   }
 
-  this.updateSize_();
-  var self = this;
-  this.resizeTo_ = win.setTimeout(function() {
-    delete self.resizeTo_;
-    self.draw_(self.getCanvas());
-  }, 100);
+  if (this.autosizing_) {
+    this.updateSize_();
+    var self = this;
+    this.resizeTo_ = win.setTimeout(function() {
+      delete self.resizeTo_;
+      self.draw_(self.getCanvas());
+    }, 100);
+  }
 };
 
 wunjo.NotebookEditor.prototype.draw_ = function(canvas) {
