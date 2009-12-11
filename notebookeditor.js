@@ -158,7 +158,7 @@ wunjo.NotebookEditor.prototype.getCurrentPage = function(page) {
 wunjo.NotebookEditor.prototype.createDom = function() {
   var elt = this.dom_.createElement('div');
   goog.dom.classes.add(elt, 'wunjo-notebookeditor');
-  elt.style.overflow = 'auto';
+  elt.style.overflow = 'clip';
   elt = elt.appendChild(this.dom_.createElement('canvas'));
   elt.width = 1;
   elt.height = 1;
@@ -226,9 +226,13 @@ wunjo.NotebookEditor.prototype.onPageResize_ = function(evt) {
 };
 
 wunjo.NotebookEditor.prototype.updatePageSize_ = function(size) {
-  var canvas = this.getCanvas();
+  var
+    elt = this.getElement(),
+    canvas = this.getCanvas(),
+    avail = this.getAvailableArea();
   canvas.width = size[0];
   canvas.height = size[1];
+  elt.style.overflow = (size[0] > avail[0] || size[1] > avail[1]) ? 'auto' : 'hidden';
   this.draw_(this.getCanvas());
 };
 
