@@ -155,6 +155,10 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
     page: this.curPage_
   });
 
+  if (this.inDocument_) {
+    this.redraw();
+  }
+
   return this.curPage_;
 };
 
