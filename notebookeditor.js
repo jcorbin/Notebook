@@ -149,7 +149,7 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
   this.dispatchEvent({
     type: 'currentpagechanged',
     notebook: this.notebook_,
-    page: page
+    page: this.curPage_
   });
 };
 
