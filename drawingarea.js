@@ -17,7 +17,21 @@ goog.inherits(wunjo.DrawingArea, goog.ui.Component);
 
 wunjo.DrawingArea.prototype.last_ = null;
 wunjo.DrawingArea.prototype.points_ = null;
-wunjo.DrawingArea.prototype.enabled = true;
+wunjo.DrawingArea.prototype.enabled_ = true;
+
+wunjo.DrawingArea.prototype.setEnabled = function(enable) {
+  if (this.enabled_ != enable) {
+    this.dispatchEvent(enable
+      ? goog.ui.Component.EventType.ENABLE
+      : goog.ui.Component.EventType.DISABLE
+    );
+  }
+  this.enabled_ = enable;
+};
+
+wunjo.DrawingArea.prototype.isEnabled = function(enable) {
+  return this.enabled_;
+};
 
 wunjo.DrawingArea.prototype.isDrawing = function() {
   return this.points ? true : false;
@@ -150,7 +164,7 @@ wunjo.DrawingArea.prototype.finishStroke_ = function() {
 };
 
 wunjo.DrawingArea.prototype.onMouseDown_ = function(evt) {
-  if (! this.enabled) return;
+  if (! this.enabled_) return;
   this.startStroke_(evt.offsetX, evt.offsetY);
 };
 

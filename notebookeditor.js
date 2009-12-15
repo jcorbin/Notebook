@@ -51,7 +51,7 @@ wunjo.NotebookEditor.prototype.enterDocument = function() {
 wunjo.NotebookEditor.prototype.setMessage = function(mess) {
   if (mess && ! mess.length) mess = null;
   this.message_ = mess;
-  this.enabled = this.message_ ? false : true;
+  this.setEnabled(this.message_ ? false : true);
   this.delayRedraw();
 };
 
