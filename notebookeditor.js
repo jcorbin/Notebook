@@ -262,6 +262,14 @@ wunjo.NotebookEditor.prototype.updatePageSize_ = function(size) {
   this.draw_(this.getCanvas());
 };
 
+wunjo.NotebookEditor.prototype.redraw = function() {
+  if (this.redrawTo_) {
+    this.dom_.getWindow().clearTimeout(this.redrawTo_);
+    delete this.redrawTo_;
+  }
+  wunjo.NotebookEditor.superClass_.redraw.call(this);
+};
+
 wunjo.NotebookEditor.prototype.delayRedraw = function() {
   var win = this.dom_.getWindow();
   if (this.redrawTo_) {
