@@ -155,11 +155,20 @@ wunjo.NotebookEditor.prototype.getCurrentPage = function(page) {
   return this.curPage_;
 };
 
+wunjo.NotebookEditor.prototype.decorateInternal = function(element) {
+  wunjo.NotebookEditor.superClass_.decorateInternal.call(this, element);
+
+  var elt = this.getElement();
+  if (elt.tagName.toLowerCase() == 'div') {
+    goog.dom.classes.add(elt, 'wunjo-notebookeditor');
+    elt.style.overflow = 'clip';
+  }
+};
+
 wunjo.NotebookEditor.prototype.createDom = function() {
-  var elt = this.dom_.createElement('div');
-  goog.dom.classes.add(elt, 'wunjo-notebookeditor');
-  elt.style.overflow = 'clip';
-  elt = elt.appendChild(this.dom_.createElement('canvas'));
+  var elt =
+    this.dom_.createElement('div')
+    .appendChild(this.dom_.createElement('canvas'));
   elt.width = 1;
   elt.height = 1;
   this.decorateInternal(elt.parentNode);
