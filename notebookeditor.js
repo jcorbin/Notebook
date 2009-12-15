@@ -48,6 +48,12 @@ wunjo.NotebookEditor.prototype.enterDocument = function() {
   );
 };
 
+wunjo.NotebookEditor.prototype.setMessage = function(mess) {
+  if (mess && ! mess.length) mess = null;
+  this.message_ = mess;
+  this.enabled = this.message_ ? false : true;
+};
+
 wunjo.NotebookEditor.prototype.getNotebook = function() {
   return this.notebook_;
 };
@@ -64,14 +70,11 @@ wunjo.NotebookEditor.prototype.setNotebook = function(nb) {
   }
 
   if (! this.notebook_) {
-    this.enabled = false;
-    this.message_ = 'No Notebook Loaded';
+    this.setMessage('No Notebook Loaded');
   } else if (this.notebook_.getPageCount() <= 0) {
-    this.enabled = false;
-    this.message_ = 'Empty Notebook';
+    this.setMessage('Empty Notebook');
   } else {
-    this.enabled = true;
-    this.message_ = null;
+    this.setMessage(null);
     this.setCurrentPage(0);
   }
 
@@ -136,8 +139,7 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
   this.curPage_ = page;
 
   if (this.curPage_) {
-    this.message_ = null;
-    this.enabled = true;
+    this.setMessage(null);
     this.pgeh_ = new goog.events.EventHandler(this);
     this.pgeh_.listen(this.curPage_, 'resize', this.onPageResize_);
     if (this.curPage_.options.autosize) {
