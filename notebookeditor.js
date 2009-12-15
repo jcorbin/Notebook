@@ -85,7 +85,7 @@ wunjo.NotebookEditor.prototype.setNotebook = function(nb) {
     notebook: this.notebook_
   });
 
-  if (this.inDocument_) this.delayRedraw();
+  this.delayRedraw();
 
   return this.notebook_;
 };
@@ -159,7 +159,7 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
     page: this.curPage_
   });
 
-  if (this.inDocument_) this.delayRedraw();
+  this.delayRedraw();
 
   return this.curPage_;
 };

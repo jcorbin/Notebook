@@ -88,6 +88,7 @@ wunjo.DrawingArea.prototype.getCanvas = function() {
 };
 
 wunjo.DrawingArea.prototype.delayRedraw = function() {
+  if (! this.inDocument_) return;
   var win = this.dom_.getWindow();
   if (this.redrawTo_) {
     win.clearTimeout(this.redrawTo_);
@@ -97,6 +98,7 @@ wunjo.DrawingArea.prototype.delayRedraw = function() {
 };
 
 wunjo.DrawingArea.prototype.redraw = function() {
+  if (! this.inDocument_) return;
   if (this.redrawTo_) {
     this.dom_.getWindow().clearTimeout(this.redrawTo_);
     delete this.redrawTo_;
