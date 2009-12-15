@@ -36,6 +36,9 @@
       <div id="newNotebook" title="New Notebook" class="goog-toolbar-button">
         <div class="wunjo-new-notebook">New</div>
       </div>
+      <div id="closeNotebook" title="Close Notebook" class="goog-toolbar-button">
+        <div class="wunjo-close-notebook">Close</div>
+      </div>
     </div>
     <div id="editor"></div>
 
@@ -49,6 +52,18 @@
       // Hookup new button
       goog.events.listen(tb.getChild('newNotebook'), goog.ui.Component.EventType.ACTION, function(e) {
         nbe.setNotebook(new wunjo.Notebook('Untitled'));
+      });
+
+      // Hookup close button
+      var close = tb.getChild('closeNotebook');
+      close.setEnabled(false);
+      goog.events.listen(close, goog.ui.Component.EventType.ACTION, function(e) {
+        nbe.setNotebook(null);
+      });
+
+      goog.events.listen(nbe, 'notebookchanged', function(e) {
+        var has = e.notebook ? true : false;
+        close.setEnabled(has);
       });
     })()</script>
 
