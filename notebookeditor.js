@@ -56,6 +56,7 @@ wunjo.NotebookEditor.prototype.setNotebook = function(nb) {
   if (this.notebook_) {
     if (this.notebook_ === nb) return;
     this.unhookupNotebook_();
+    this.notebook_ = null;
   }
   if (nb) {
     this.notebook_ = nb;
