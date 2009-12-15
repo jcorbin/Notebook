@@ -27,9 +27,11 @@
   </head>
   <body>
 
+    <div id="editor"></div>
+
     <script>(function() {
       var nbe = new wunjo.NotebookEditor();
-      nbe.render();
+      nbe.decorate(goog.dom.$('editor'));
       var nb = nbe.setNotebook(new wunjo.Notebook('Untitled'));
       nb.addPage(new wunjo.Notebook.Page(null, 1, 1, {autosize: true}));
     })()</script>
