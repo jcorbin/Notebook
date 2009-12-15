@@ -87,7 +87,20 @@ wunjo.DrawingArea.prototype.getCanvas = function() {
   return this.getElement();
 };
 
+wunjo.DrawingArea.prototype.delayRedraw = function() {
+  var win = this.dom_.getWindow();
+  if (this.redrawTo_) {
+    win.clearTimeout(this.redrawTo_);
+    delete this.redrawTo_;
+  }
+  this.redrawTo_ = win.setTimeout(goog.bind(this.redraw, this), 100);
+};
+
 wunjo.DrawingArea.prototype.redraw = function() {
+  if (this.redrawTo_) {
+    this.dom_.getWindow().clearTimeout(this.redrawTo_);
+    delete this.redrawTo_;
+  }
   var canvas = this.getCanvas();
   canvas.width = canvas.width;
   this.draw_(canvas);

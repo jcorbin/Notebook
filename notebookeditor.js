@@ -260,23 +260,6 @@ wunjo.NotebookEditor.prototype.updatePageSize_ = function(size) {
   this.draw_(this.getCanvas());
 };
 
-wunjo.NotebookEditor.prototype.redraw = function() {
-  if (this.redrawTo_) {
-    this.dom_.getWindow().clearTimeout(this.redrawTo_);
-    delete this.redrawTo_;
-  }
-  wunjo.NotebookEditor.superClass_.redraw.call(this);
-};
-
-wunjo.NotebookEditor.prototype.delayRedraw = function() {
-  var win = this.dom_.getWindow();
-  if (this.redrawTo_) {
-    win.clearTimeout(this.redrawTo_);
-    delete this.redrawTo_;
-  }
-  this.redrawTo_ = win.setTimeout(goog.bind(this.redraw, this), 100);
-};
-
 wunjo.NotebookEditor.prototype.draw_ = function(canvas) {
   if (this.message_) {
     var
