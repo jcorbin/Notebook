@@ -46,13 +46,12 @@ wunjo.DrawingArea.prototype.decorateInternal = function(element) {
 
   var canvas = this.getCanvas();
   goog.dom.classes.add(canvas, 'wunjo-drawingarea');
+  canvas.width = 1;
+  canvas.height = 1;
 };
 
 wunjo.DrawingArea.prototype.createDom = function() {
-  var elt = this.dom_.createElement('canvas');
-  elt.width = 1;
-  elt.height = 1;
-  this.decorateInternal(elt);
+  this.decorateInternal(this.dom_.createElement('canvas'));
 };
 
 wunjo.DrawingArea.prototype.enterDocument = function() {
