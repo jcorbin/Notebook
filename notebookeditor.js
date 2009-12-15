@@ -52,6 +52,7 @@ wunjo.NotebookEditor.prototype.setMessage = function(mess) {
   if (mess && ! mess.length) mess = null;
   this.message_ = mess;
   this.enabled = this.message_ ? false : true;
+  this.delayRedraw();
 };
 
 wunjo.NotebookEditor.prototype.getNotebook = function() {
