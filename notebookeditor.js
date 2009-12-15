@@ -138,12 +138,15 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
     this.pgeh_ = null;
   }
   this.curPage_ = page;
-  this.pgeh_ = new goog.events.EventHandler(this);
-  this.pgeh_.listen(this.curPage_, 'resize', this.onPageResize_);
-  if (this.curPage_.options.autosize) {
-    this.updateSize_();
-  } else {
-    this.updatePageSize_(this.curPage_.getSize());
+
+  if (this.curPage_) {
+    this.pgeh_ = new goog.events.EventHandler(this);
+    this.pgeh_.listen(this.curPage_, 'resize', this.onPageResize_);
+    if (this.curPage_.options.autosize) {
+      this.updateSize_();
+    } else {
+      this.updatePageSize_(this.curPage_.getSize());
+    }
   }
 
   this.dispatchEvent({
