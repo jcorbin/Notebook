@@ -126,10 +126,6 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
   if (page != null && ! page instanceof wunjo.Notebook.Page) {
     page = this.notebook_.getPage(page);
   }
-  if (this.message_) {
-    this.message_ = null;
-    this.enabled = true;
-  }
   if (this.autosizing_) {
     this.autosizing_ = null;
   }
@@ -140,6 +136,8 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
   this.curPage_ = page;
 
   if (this.curPage_) {
+    this.message_ = null;
+    this.enabled = true;
     this.pgeh_ = new goog.events.EventHandler(this);
     this.pgeh_.listen(this.curPage_, 'resize', this.onPageResize_);
     if (this.curPage_.options.autosize) {
