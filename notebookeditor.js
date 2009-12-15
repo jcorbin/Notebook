@@ -156,6 +156,10 @@ wunjo.NotebookEditor.prototype.getCurrentPage = function(page) {
 };
 
 wunjo.NotebookEditor.prototype.decorateInternal = function(element) {
+  if (! element.getElementsByTagName('canvas').length) {
+    element.appendChild(this.dom_.createElement('canvas'));
+  }
+
   wunjo.NotebookEditor.superClass_.decorateInternal.call(this, element);
 
   var elt = this.getElement();
