@@ -18,13 +18,16 @@
       }
     </style>
     <link rel="stylesheet" href="closure/goog/demos/css/demo.css">
+    <link rel="stylesheet" href="closure/goog/demos/css/menus.css">
     <link rel="stylesheet" href="closure/goog/demos/css/toolbar.css">
+    <link rel="stylesheet" href="closure/goog/demos/css/colormenubutton.css">
     <script language="JavaScript" src="closure/goog/base.js"></script>
     <script language="JavaScript">
       goog.require('goog.ui.Component');
       goog.require('goog.ui.Toolbar');
       goog.require('goog.ui.ToolbarRenderer');
       goog.require('goog.ui.ToolbarButton');
+      goog.require('goog.ui.ToolbarColorMenuButton');
     </script>
     <script language="JavaScript" src="drawingarea.js"></script>
     <script language="JavaScript" src="notebook.js"></script>
@@ -41,6 +44,9 @@
       </div>
       <div id="addPage" title="Add Page" class="goog-toolbar-button">
         <div class="wunjo-add-page">Add Page</div>
+      </div>
+      <div id="penColor" title="Pen Color" class="goog-toolbar-color-menu-button">
+        Color
       </div>
     </div>
     <div id="editor"></div>
@@ -71,6 +77,16 @@
         var nb = nbe.getNotebook();
         if (! nb) return;
         nb.addPage(new wunjo.Notebook.Page(null, 1, 1, {autosize: true}));
+      });
+
+      // Hookup penColor button
+      var pc = tb.getChild('penColor');
+      pc.setSelectedColor(nbe.getPen().color);
+      goog.events.listen(pc, goog.ui.Component.EventType.ACTION, function(e) {
+        nbe.setPen(
+          e.target.getSelectedColor(),
+          nbe.getPen().size
+        );
       });
 
       goog.events.listen(nbe, 'notebookchanged', function(e) {
