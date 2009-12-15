@@ -135,6 +135,7 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
   }
   if (this.pgeh_) {
     this.pgeh_.dispose();
+    this.pgeh_ = null;
   }
   this.curPage_ = page;
   this.pgeh_ = new goog.events.EventHandler(this);
