@@ -166,12 +166,10 @@ wunjo.NotebookEditor.prototype.decorateInternal = function(element) {
 };
 
 wunjo.NotebookEditor.prototype.createDom = function() {
-  var elt =
-    this.dom_.createElement('div')
-    .appendChild(this.dom_.createElement('canvas'));
-  elt.width = 1;
-  elt.height = 1;
-  this.decorateInternal(elt.parentNode);
+  this.decorateInternal(this.dom_.createElement('div')
+    .appendChild(this.dom_.createElement('canvas'))
+    .parentNode
+  );
 };
 
 wunjo.NotebookEditor.prototype.getCanvas = function() {
