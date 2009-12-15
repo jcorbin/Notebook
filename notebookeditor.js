@@ -98,7 +98,7 @@ wunjo.NotebookEditor.prototype.hookupNotebook_ = function() {
 
 wunjo.NotebookEditor.prototype.unhookupNotebook_ = function() {
   if (this.nbeh_) {
-    this.nbeh_.removeAll();
+    this.nbeh_.dispose();
     this.nbeh_ = null;
   }
 };
