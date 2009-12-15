@@ -154,6 +154,8 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
     notebook: this.notebook_,
     page: this.curPage_
   });
+
+  return this.curPage_;
 };
 
 wunjo.NotebookEditor.prototype.getCurrentPage = function(page) {
