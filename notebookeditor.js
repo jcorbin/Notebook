@@ -62,6 +62,7 @@ wunjo.NotebookEditor.prototype.getNotebook = function() {
 wunjo.NotebookEditor.prototype.setNotebook = function(nb) {
   if (this.notebook_) {
     if (this.notebook_ === nb) return;
+    this.setCurrentPage(null);
     this.unhookupNotebook_();
     this.notebook_ = null;
   }
