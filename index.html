@@ -24,6 +24,7 @@
       goog.require('goog.ui.Component');
       goog.require('goog.ui.Toolbar');
       goog.require('goog.ui.ToolbarRenderer');
+      goog.require('goog.ui.ToolbarButton');
     </script>
     <script language="JavaScript" src="drawingarea.js"></script>
     <script language="JavaScript" src="notebook.js"></script>
@@ -32,6 +33,9 @@
   <body>
 
     <div id="toolbar">
+      <div id="newNotebook" title="New Notebook" class="goog-toolbar-button">
+        <div class="wunjo-new-notebook">New</div>
+      </div>
     </div>
     <div id="editor"></div>
 
@@ -41,6 +45,11 @@
 
       var tb = new goog.ui.Toolbar();
       tb.decorate(goog.dom.$('toolbar'));
+
+      // Hookup new button
+      goog.events.listen(tb.getChild('newNotebook'), goog.ui.Component.EventType.ACTION, function(e) {
+        nbe.setNotebook(new wunjo.Notebook('Untitled'));
+      });
     })()</script>
 
   </body>
