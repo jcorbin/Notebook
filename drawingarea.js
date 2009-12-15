@@ -11,7 +11,7 @@ goog.require('goog.ui.Component');
 wunjo.DrawingArea = function(opt_domHelper) {
   goog.ui.Component.call(this, opt_domHelper);
 
-  this.pen_ = {color: 'rgba(128, 0, 0, 0.5)', size: 5};
+  this.pen_ = {color: 'rgb(0, 0, 0)', size: 3};
 };
 goog.inherits(wunjo.DrawingArea, goog.ui.Component);
 
