@@ -147,6 +147,10 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
     } else {
       this.updatePageSize_(this.curPage_.getSize());
     }
+  } else {
+    this.setMessage(this.notebook_.getPageCount() <= 0
+      ? 'Empty Notebook' : 'No current page'
+    );
   }
 
   this.dispatchEvent({
