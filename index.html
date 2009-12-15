@@ -39,6 +39,9 @@
       <div id="closeNotebook" title="Close Notebook" class="goog-toolbar-button">
         <div class="wunjo-close-notebook">Close</div>
       </div>
+      <div id="addPage" title="Add Page" class="goog-toolbar-button">
+        <div class="wunjo-add-page">Add Page</div>
+      </div>
     </div>
     <div id="editor"></div>
 
@@ -61,9 +64,19 @@
         nbe.setNotebook(null);
       });
 
+      // Hookup add page button
+      var addPage = tb.getChild('addPage');
+      addPage.setEnabled(false);
+      goog.events.listen(addPage, goog.ui.Component.EventType.ACTION, function(e) {
+        var nb = nbe.getNotebook();
+        if (! nb) return;
+        nb.addPage(new wunjo.Notebook.Page(null, 1, 1, {autosize: true}));
+      });
+
       goog.events.listen(nbe, 'notebookchanged', function(e) {
         var has = e.notebook ? true : false;
         close.setEnabled(has);
+        addPage.setEnabled(has);
       });
     })()</script>
 
