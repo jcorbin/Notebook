@@ -276,11 +276,7 @@ wunjo.NotebookEditor.prototype.delayRedraw = function() {
     win.clearTimeout(this.redrawTo_);
     delete this.redrawTo_;
   }
-  var self = this;
-  this.redrawTo_ = win.setTimeout(function() {
-    delete self.redrawTo_;
-    self.draw_(self.getCanvas());
-  }, 100);
+  this.redrawTo_ = win.setTimeout(goog.bind(this.redraw, this), 100);
 };
 
 wunjo.NotebookEditor.prototype.draw_ = function(canvas) {
