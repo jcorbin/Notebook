@@ -17,9 +17,13 @@
       .wunjo-drawingarea {
       }
     </style>
+    <link rel="stylesheet" href="closure/goog/demos/css/demo.css">
+    <link rel="stylesheet" href="closure/goog/demos/css/toolbar.css">
     <script language="JavaScript" src="closure/goog/base.js"></script>
     <script language="JavaScript">
       goog.require('goog.ui.Component');
+      goog.require('goog.ui.Toolbar');
+      goog.require('goog.ui.ToolbarRenderer');
     </script>
     <script language="JavaScript" src="drawingarea.js"></script>
     <script language="JavaScript" src="notebook.js"></script>
@@ -27,11 +31,16 @@
   </head>
   <body>
 
+    <div id="toolbar">
+    </div>
     <div id="editor"></div>
 
     <script>(function() {
       var nbe = new wunjo.NotebookEditor();
       nbe.decorate(goog.dom.$('editor'));
+
+      var tb = new goog.ui.Toolbar();
+      tb.decorate(goog.dom.$('toolbar'));
     })()</script>
 
   </body>
