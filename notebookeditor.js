@@ -177,9 +177,9 @@ wunjo.NotebookEditor.prototype.getCanvas = function() {
   if (elt.tagName.toLowerCase() == 'canvas') {
     return elt;
   }
-  elt = elt.firstChild;
-  if (elt.tagName.toLowerCase() == 'canvas') {
-    return elt;
+  var c = elt.getElementsByTagName('canvas');
+  if (c.length) {
+    return c[0];
   }
   throw Error("Coludn't find canvas element");
 };
