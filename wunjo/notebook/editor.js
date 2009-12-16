@@ -1,19 +1,22 @@
-goog.provide('wunjo.NotebookEditor');
-
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.ui.Component');
 
-wunjo.NotebookEditor = function(notebook, opt_domHelper) {
-  wunjo.DrawingArea.call(this, opt_domHelper);
+goog.require('wunjo.notebook');
+goog.require('wunjo.ui.DrawingArea');
+
+goog.provide('wunjo.notebook.Editor');
+
+wunjo.notebook.Editor = function(notebook, opt_domHelper) {
+  wunjo.ui.DrawingArea.call(this, opt_domHelper);
 
   this.setNotebook(notebook);
 };
-goog.inherits(wunjo.NotebookEditor, wunjo.DrawingArea);
+goog.inherits(wunjo.notebook.Editor, wunjo.ui.DrawingArea);
 
-wunjo.NotebookEditor.getDPI = function() {
+wunjo.notebook.Editor.getDPI = function() {
   if (this.DPI == undefined) {
     var dpiTest = document.body.appendChild(
       document.createElement('div')
@@ -25,41 +28,41 @@ wunjo.NotebookEditor.getDPI = function() {
   return this.DPI;
 };
 
-wunjo.NotebookEditor.prototype.messageFont = 'normal bold 16px/18px sans-serif';
-wunjo.NotebookEditor.prototype.notebook_ = null;
-wunjo.NotebookEditor.prototype.message_ = null;
-wunjo.NotebookEditor.prototype.autosizing_ = null;
-wunjo.NotebookEditor.prototype.nbeh_ = null;
-wunjo.NotebookEditor.prototype.pgeh_ = null;
-wunjo.NotebookEditor.prototype.curPage_ = null;
-wunjo.NotebookEditor.prototype.dsize_ = null;
+wunjo.notebook.Editor.prototype.messageFont = 'normal bold 16px/18px sans-serif';
+wunjo.notebook.Editor.prototype.notebook_ = null;
+wunjo.notebook.Editor.prototype.message_ = null;
+wunjo.notebook.Editor.prototype.autosizing_ = null;
+wunjo.notebook.Editor.prototype.nbeh_ = null;
+wunjo.notebook.Editor.prototype.pgeh_ = null;
+wunjo.notebook.Editor.prototype.curPage_ = null;
+wunjo.notebook.Editor.prototype.dsize_ = null;
 
-wunjo.NotebookEditor.prototype.enterDocument = function() {
+wunjo.notebook.Editor.prototype.enterDocument = function() {
   var elt = this.getElement();
   this.dsize_ = [
     elt.offsetWidth - elt.clientWidth,
     elt.offsetHeight - elt.clientHeight
   ];
-  wunjo.NotebookEditor.superClass_.enterDocument.call(this);
-  this.getCanvas().dpi = wunjo.NotebookEditor.getDPI();
+  wunjo.notebook.Editor.superClass_.enterDocument.call(this);
+  this.getCanvas().dpi = wunjo.notebook.Editor.getDPI();
   this.getHandler().listen(
     this.dom_.getWindow(), goog.events.EventType.RESIZE,
     this.onWindowResize_
   );
 };
 
-wunjo.NotebookEditor.prototype.setMessage = function(mess) {
+wunjo.notebook.Editor.prototype.setMessage = function(mess) {
   if (mess && ! mess.length) mess = null;
   this.message_ = mess;
   this.setEnabled(this.message_ ? false : true);
   this.delayRedraw();
 };
 
-wunjo.NotebookEditor.prototype.getNotebook = function() {
+wunjo.notebook.Editor.prototype.getNotebook = function() {
   return this.notebook_;
 };
 
-wunjo.NotebookEditor.prototype.setNotebook = function(nb) {
+wunjo.notebook.Editor.prototype.setNotebook = function(nb) {
   if (this.notebook_) {
     if (this.notebook_ === nb) return;
     this.setCurrentPage(null);
@@ -90,7 +93,7 @@ wunjo.NotebookEditor.prototype.setNotebook = function(nb) {
   return this.notebook_;
 };
 
-wunjo.NotebookEditor.prototype.hookupNotebook_ = function() {
+wunjo.notebook.Editor.prototype.hookupNotebook_ = function() {
   if (this.nbeh_) {
     this.nbeh_.dispose();
   }
@@ -99,20 +102,20 @@ wunjo.NotebookEditor.prototype.hookupNotebook_ = function() {
   this.nbeh_.listen(this.notebook_, 'pageremoved', this.onPageRemoved_);
 };
 
-wunjo.NotebookEditor.prototype.unhookupNotebook_ = function() {
+wunjo.notebook.Editor.prototype.unhookupNotebook_ = function() {
   if (this.nbeh_) {
     this.nbeh_.dispose();
     this.nbeh_ = null;
   }
 };
 
-wunjo.NotebookEditor.prototype.onPageAdded_ = function(evt) {
+wunjo.notebook.Editor.prototype.onPageAdded_ = function(evt) {
   if (! this.curPage_) {
     this.setCurrentPage(evt.page);
   }
 };
 
-wunjo.NotebookEditor.prototype.onPageRemoved_ = function(evt) {
+wunjo.notebook.Editor.prototype.onPageRemoved_ = function(evt) {
   if (this.curPage_ && this.curPage_ === evt.page) {
     var c = this.notebook_.getPageCount();
     if (c) {
@@ -125,8 +128,8 @@ wunjo.NotebookEditor.prototype.onPageRemoved_ = function(evt) {
   }
 };
 
-wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
-  if (page != null && ! page instanceof wunjo.Notebook.Page) {
+wunjo.notebook.Editor.prototype.setCurrentPage = function(page) {
+  if (page != null && ! page instanceof wunjo.notebook.Page) {
     page = this.notebook_.getPage(page);
   }
   if (this.autosizing_) {
@@ -164,16 +167,16 @@ wunjo.NotebookEditor.prototype.setCurrentPage = function(page) {
   return this.curPage_;
 };
 
-wunjo.NotebookEditor.prototype.getCurrentPage = function(page) {
+wunjo.notebook.Editor.prototype.getCurrentPage = function(page) {
   return this.curPage_;
 };
 
-wunjo.NotebookEditor.prototype.decorateInternal = function(element) {
+wunjo.notebook.Editor.prototype.decorateInternal = function(element) {
   if (! element.getElementsByTagName('canvas').length) {
     element.appendChild(this.dom_.createElement('canvas'));
   }
 
-  wunjo.NotebookEditor.superClass_.decorateInternal.call(this, element);
+  wunjo.notebook.Editor.superClass_.decorateInternal.call(this, element);
 
   var elt = this.getElement();
   if (elt.tagName.toLowerCase() == 'div') {
@@ -182,14 +185,14 @@ wunjo.NotebookEditor.prototype.decorateInternal = function(element) {
   }
 };
 
-wunjo.NotebookEditor.prototype.createDom = function() {
+wunjo.notebook.Editor.prototype.createDom = function() {
   this.decorateInternal(this.dom_.createElement('div')
     .appendChild(this.dom_.createElement('canvas'))
     .parentNode
   );
 };
 
-wunjo.NotebookEditor.prototype.getCanvas = function() {
+wunjo.notebook.Editor.prototype.getCanvas = function() {
   var elt = this.getElement();
   if (elt.tagName.toLowerCase() == 'canvas') {
     return elt;
@@ -201,7 +204,7 @@ wunjo.NotebookEditor.prototype.getCanvas = function() {
   throw Error("Coludn't find canvas element");
 };
 
-wunjo.NotebookEditor.prototype.getAvailableArea = function() {
+wunjo.notebook.Editor.prototype.getAvailableArea = function() {
   var elt = this.getElement();
   if (elt.tagName.toLowerCase() == 'canvas') {
     throw Error('No container');
@@ -212,12 +215,12 @@ wunjo.NotebookEditor.prototype.getAvailableArea = function() {
   ];
 };
 
-wunjo.NotebookEditor.prototype.setAutosize_ = function(minSize) {
+wunjo.notebook.Editor.prototype.setAutosize_ = function(minSize) {
   this.autosizing_ = minSize;
   this.updateSize_();
 };
 
-wunjo.NotebookEditor.prototype.updateSize_ = function() {
+wunjo.notebook.Editor.prototype.updateSize_ = function() {
   var size = this.getAvailableArea();
   if (this.autosizing_) {
     size = [
@@ -236,7 +239,7 @@ wunjo.NotebookEditor.prototype.updateSize_ = function() {
   }
 };
 
-wunjo.NotebookEditor.prototype.onWindowResize_ = function() {
+wunjo.notebook.Editor.prototype.onWindowResize_ = function() {
   if (this.autosizing_) {
     this.updateSize_();
     this.delayRedraw();
@@ -245,11 +248,11 @@ wunjo.NotebookEditor.prototype.onWindowResize_ = function() {
   }
 };
 
-wunjo.NotebookEditor.prototype.onPageResize_ = function(evt) {
+wunjo.notebook.Editor.prototype.onPageResize_ = function(evt) {
   this.updatePageSize_(evt.value);
 };
 
-wunjo.NotebookEditor.prototype.updatePageSize_ = function(size) {
+wunjo.notebook.Editor.prototype.updatePageSize_ = function(size) {
   var
     elt = this.getElement(),
     canvas = this.getCanvas(),
@@ -260,7 +263,7 @@ wunjo.NotebookEditor.prototype.updatePageSize_ = function(size) {
   this.draw_(this.getCanvas());
 };
 
-wunjo.NotebookEditor.prototype.draw_ = function(canvas) {
+wunjo.notebook.Editor.prototype.draw_ = function(canvas) {
   if (this.message_) {
     var
       canvas = this.getCanvas(),
@@ -277,22 +280,22 @@ wunjo.NotebookEditor.prototype.draw_ = function(canvas) {
     this.curPage_.draw(canvas);
   }
 
-  wunjo.NotebookEditor.superClass_.draw_.call(this, canvas);
+  wunjo.notebook.Editor.superClass_.draw_.call(this, canvas);
 };
 
-wunjo.NotebookEditor.prototype.finishStroke_ = function() {
+wunjo.notebook.Editor.prototype.finishStroke_ = function() {
   var points = this.points_;
-  wunjo.NotebookEditor.superClass_.finishStroke_.call(this);
+  wunjo.notebook.Editor.superClass_.finishStroke_.call(this);
   if (this.curPage_) {
     var layer;
     if (! this.curPage_.getLayerCount()) {
       layer = this.curPage_.addLayer(
-        new wunjo.Notebook.Layer('default')
+        new wunjo.notebook.Layer('default')
       );
     } else {
       layer = this.curPage_.getLayer(0);
     }
-    var stroke = new wunjo.Notebook.Stroke(this.pen_.size, this.pen_.color);
+    var stroke = new wunjo.notebook.Stroke(this.pen_.size, this.pen_.color);
     for (var i=0; i<points.length; i++) {
       stroke.addPoint(points[i][0], points[i][1]);
     }

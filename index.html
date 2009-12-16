@@ -11,9 +11,9 @@
       goog.require('goog.ui.ToolbarButton');
       goog.require('goog.ui.ToolbarColorMenuButton');
     </script>
-    <script language="JavaScript" src="drawingarea.js"></script>
-    <script language="JavaScript" src="notebook.js"></script>
-    <script language="JavaScript" src="notebookeditor.js"></script>
+    <script language="JavaScript" src="wunjo/ui/drawingarea.js"></script>
+    <script language="JavaScript" src="wunjo/notebook/notebook.js"></script>
+    <script language="JavaScript" src="wunjo/notebook/editor.js"></script>
   </head>
   <body>
 
@@ -34,7 +34,7 @@
     <div id="editor"></div>
 
     <script>(function() {
-      var nbe = new wunjo.NotebookEditor();
+      var nbe = new wunjo.notebook.Editor();
       nbe.decorate(goog.dom.$('editor'));
 
       var tb = new goog.ui.Toolbar();
@@ -42,7 +42,7 @@
 
       // Hookup new button
       goog.events.listen(tb.getChild('newNotebook'), goog.ui.Component.EventType.ACTION, function(e) {
-        nbe.setNotebook(new wunjo.Notebook('Untitled'));
+        nbe.setNotebook(new wunjo.notebook('Untitled'));
       });
 
       // Hookup close button
@@ -58,7 +58,7 @@
       goog.events.listen(addPage, goog.ui.Component.EventType.ACTION, function(e) {
         var nb = nbe.getNotebook();
         if (! nb) return;
-        nb.addPage(new wunjo.Notebook.Page(null, 1, 1, {autosize: true}));
+        nb.addPage(new wunjo.notebook.Page(null, 1, 1, {autosize: true}));
       });
 
       // Hookup penColor button

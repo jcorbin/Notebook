@@ -1,4 +1,4 @@
-goog.provide('wunjo.DrawingArea');
+goog.provide('wunjo.ui.DrawingArea');
 
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
@@ -8,18 +8,18 @@ goog.require('goog.events.EventType');
 goog.require('goog.ui.Component');
 
 
-wunjo.DrawingArea = function(opt_domHelper) {
+wunjo.ui.DrawingArea = function(opt_domHelper) {
   goog.ui.Component.call(this, opt_domHelper);
 
   this.pen_ = {color: 'rgb(0, 0, 0)', size: 3};
 };
-goog.inherits(wunjo.DrawingArea, goog.ui.Component);
+goog.inherits(wunjo.ui.DrawingArea, goog.ui.Component);
 
-wunjo.DrawingArea.prototype.last_ = null;
-wunjo.DrawingArea.prototype.points_ = null;
-wunjo.DrawingArea.prototype.enabled_ = true;
+wunjo.ui.DrawingArea.prototype.last_ = null;
+wunjo.ui.DrawingArea.prototype.points_ = null;
+wunjo.ui.DrawingArea.prototype.enabled_ = true;
 
-wunjo.DrawingArea.prototype.setEnabled = function(enable) {
+wunjo.ui.DrawingArea.prototype.setEnabled = function(enable) {
   if (this.enabled_ != enable) {
     this.dispatchEvent(enable
       ? goog.ui.Component.EventType.ENABLE
@@ -29,34 +29,34 @@ wunjo.DrawingArea.prototype.setEnabled = function(enable) {
   this.enabled_ = enable;
 };
 
-wunjo.DrawingArea.prototype.isEnabled = function(enable) {
+wunjo.ui.DrawingArea.prototype.isEnabled = function(enable) {
   return this.enabled_;
 };
 
-wunjo.DrawingArea.prototype.isDrawing = function() {
+wunjo.ui.DrawingArea.prototype.isDrawing = function() {
   return this.points ? true : false;
 };
 
-wunjo.DrawingArea.prototype.getPoints = function() {
+wunjo.ui.DrawingArea.prototype.getPoints = function() {
   if (! this.points_) {
     throw Error('Not drawing, no points');
   }
   return this.points_;
 };
 
-wunjo.DrawingArea.prototype.setPen = function(color, size) {
+wunjo.ui.DrawingArea.prototype.setPen = function(color, size) {
   this.pen_ = {color: color, size: size};
   if (this.points_) {
     this.redraw();
   }
 };
 
-wunjo.DrawingArea.prototype.getPen = function() {
+wunjo.ui.DrawingArea.prototype.getPen = function() {
   return this.pen_;
 };
 
-wunjo.DrawingArea.prototype.decorateInternal = function(element) {
-  wunjo.DrawingArea.superClass_.decorateInternal.call(this, element);
+wunjo.ui.DrawingArea.prototype.decorateInternal = function(element) {
+  wunjo.ui.DrawingArea.superClass_.decorateInternal.call(this, element);
 
   var canvas = this.getCanvas();
   goog.dom.classes.add(canvas, 'wunjo-drawingarea');
@@ -64,12 +64,12 @@ wunjo.DrawingArea.prototype.decorateInternal = function(element) {
   canvas.height = 1;
 };
 
-wunjo.DrawingArea.prototype.createDom = function() {
+wunjo.ui.DrawingArea.prototype.createDom = function() {
   this.decorateInternal(this.dom_.createElement('canvas'));
 };
 
-wunjo.DrawingArea.prototype.enterDocument = function() {
-  wunjo.DrawingArea.superClass_.enterDocument.call(this);
+wunjo.ui.DrawingArea.prototype.enterDocument = function() {
+  wunjo.ui.DrawingArea.superClass_.enterDocument.call(this);
   this.getHandler().listen(
     this.getElement(), goog.events.EventType.MOUSEDOWN,
     this.onMouseDown_
@@ -77,17 +77,17 @@ wunjo.DrawingArea.prototype.enterDocument = function() {
   this.draw_(this.getCanvas());
 };
 
-wunjo.DrawingArea.prototype.exitDocument = function() {
-  wunjo.DrawingArea.superClass_.exitDocument.call(this);
+wunjo.ui.DrawingArea.prototype.exitDocument = function() {
+  wunjo.ui.DrawingArea.superClass_.exitDocument.call(this);
   this.last_ = null;
   this.points_ = null;
 };
 
-wunjo.DrawingArea.prototype.getCanvas = function() {
+wunjo.ui.DrawingArea.prototype.getCanvas = function() {
   return this.getElement();
 };
 
-wunjo.DrawingArea.prototype.delayRedraw = function() {
+wunjo.ui.DrawingArea.prototype.delayRedraw = function() {
   if (! this.inDocument_) return;
   var win = this.dom_.getWindow();
   if (this.redrawTo_) {
@@ -97,7 +97,7 @@ wunjo.DrawingArea.prototype.delayRedraw = function() {
   this.redrawTo_ = win.setTimeout(goog.bind(this.redraw, this), 100);
 };
 
-wunjo.DrawingArea.prototype.redraw = function() {
+wunjo.ui.DrawingArea.prototype.redraw = function() {
   if (! this.inDocument_) return;
   if (this.redrawTo_) {
     this.dom_.getWindow().clearTimeout(this.redrawTo_);
@@ -108,7 +108,7 @@ wunjo.DrawingArea.prototype.redraw = function() {
   this.draw_(canvas);
 };
 
-wunjo.DrawingArea.prototype.drawPath_ = function drawPath(canvas, points, pen) {
+wunjo.ui.DrawingArea.prototype.drawPath_ = function drawPath(canvas, points, pen) {
   if (points.length <= 0) return;
 
   var ctx = canvas.getContext('2d');
@@ -132,13 +132,13 @@ wunjo.DrawingArea.prototype.drawPath_ = function drawPath(canvas, points, pen) {
   }
 };
 
-wunjo.DrawingArea.prototype.draw_ = function(canvas) {
+wunjo.ui.DrawingArea.prototype.draw_ = function(canvas) {
   if (this.points_) {
     this.drawPath_(canvas, this.points_, this.pen_);
   }
 };
 
-wunjo.DrawingArea.prototype.cleanupStroke_ = function() {
+wunjo.ui.DrawingArea.prototype.cleanupStroke_ = function() {
   var elt = this.getElement(), hndl = this.getHandler();
   hndl.unlisten(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
   hndl.unlisten(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
@@ -147,7 +147,7 @@ wunjo.DrawingArea.prototype.cleanupStroke_ = function() {
   this.points_ = null;
 };
 
-wunjo.DrawingArea.prototype.startStroke_ = function(x, y) {
+wunjo.ui.DrawingArea.prototype.startStroke_ = function(x, y) {
   var elt = this.getElement(), hndl = this.getHandler();
   hndl.listen(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
   hndl.listen(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
@@ -158,7 +158,7 @@ wunjo.DrawingArea.prototype.startStroke_ = function(x, y) {
   this.redraw();
 };
 
-wunjo.DrawingArea.prototype.updateStroke_ = function(x, y) {
+wunjo.ui.DrawingArea.prototype.updateStroke_ = function(x, y) {
   if (this.last_) {
     if (x == this.last_[0] && y == this.last_[1]) return;
     if (this.pen_.halfSizeSq == undefined) {
@@ -172,27 +172,27 @@ wunjo.DrawingArea.prototype.updateStroke_ = function(x, y) {
   this.redraw();
 };
 
-wunjo.DrawingArea.prototype.finishStroke_ = function() {
+wunjo.ui.DrawingArea.prototype.finishStroke_ = function() {
   var points = this.points_;
   this.cleanupStroke_();
   this.dispatchEvent({type: 'stroke', points: points});
 };
 
-wunjo.DrawingArea.prototype.onMouseDown_ = function(evt) {
+wunjo.ui.DrawingArea.prototype.onMouseDown_ = function(evt) {
   if (! this.enabled_) return;
   this.startStroke_(evt.offsetX, evt.offsetY);
 };
 
-wunjo.DrawingArea.prototype.onMouseMove_ = function(evt) {
+wunjo.ui.DrawingArea.prototype.onMouseMove_ = function(evt) {
   this.updateStroke_(evt.offsetX, evt.offsetY);
 };
 
-wunjo.DrawingArea.prototype.onMouseUp_ = function(evt) {
+wunjo.ui.DrawingArea.prototype.onMouseUp_ = function(evt) {
   this.updateStroke_(evt.offsetX, evt.offsetY);
   this.finishStroke_();
 };
 
-wunjo.DrawingArea.prototype.onMouseOut_ = function(evt) {
+wunjo.ui.DrawingArea.prototype.onMouseOut_ = function(evt) {
   this.finishStroke_();
 };
 
