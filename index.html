@@ -12,6 +12,7 @@
       goog.require('goog.ui.ToolbarColorMenuButton');
     </script>
     <script language="JavaScript" src="wunjo/ui/drawingarea.js"></script>
+    <script language="JavaScript" src="wunjo/ui/penmenubutton.js"></script>
     <script language="JavaScript" src="wunjo/notebook/notebook.js"></script>
     <script language="JavaScript" src="wunjo/notebook/editorarea.js"></script>
   </head>
@@ -27,8 +28,8 @@
       <div id="addPage" title="Add Page" class="goog-toolbar-button">
         <div class="wunjo-add-page">Add Page</div>
       </div>
-      <div id="pen" title="Pen" class="goog-toolbar-color-menu-button">
-        Color
+      <div id="pen" title="Pen" class="wunjo-toolbar-pen-menu-button">
+        Pen
       </div>
     </div>
     <div id="editor"></div>
@@ -63,11 +64,11 @@
 
       // Hookup pen button
       var pc = tb.getChild('pen');
-      pc.setSelectedColor(nbe.getPen().color);
+      pc.setValue(nbe.getPen());
       goog.events.listen(pc, goog.ui.Component.EventType.ACTION, function(e) {
         nbe.setPen(
           e.target.getSelectedColor(),
-          nbe.getPen().size
+          e.target.getSelectedSize()
         );
       });
 
