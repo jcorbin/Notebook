@@ -1,0 +1,20 @@
+@import url("closure/goog/demos/css/demo.css");
+@import url("closure/goog/demos/css/menus.css");
+@import url("closure/goog/demos/css/toolbar.css");
+@import url("closure/goog/demos/css/colormenubutton.css");
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wunjo-notebookeditor {
+  height: 100%;
+}
+
+.wunjo-drawingarea {
+}
+
+/* vim:set ts=2 sw=2 expandtab: */
