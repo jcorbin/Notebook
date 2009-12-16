@@ -82,6 +82,10 @@
         close.setEnabled(has);
         addPage.setEnabled(has);
       });
+
+      nbe
+        .setNotebook(new wunjo.notebook('Untitled'))
+        .addPage(new wunjo.notebook.Page(null, 1, 1, {autosize: true}));
     })()</script>
 
   </body>
