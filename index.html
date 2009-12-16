@@ -18,21 +18,23 @@
   </head>
   <body>
 
-    <div id="toolbar">
-      <div id="newNotebook" title="New Notebook" class="goog-toolbar-button">
-        <div class="wunjo-new-notebook">New</div>
+    <div id="container">
+      <div id="toolbar">
+        <div id="newNotebook" title="New Notebook" class="goog-toolbar-button">
+          <div class="wunjo-new-notebook">New</div>
+        </div>
+        <div id="closeNotebook" title="Close Notebook" class="goog-toolbar-button">
+          <div class="wunjo-close-notebook">Close</div>
+        </div>
+        <div id="addPage" title="Add Page" class="goog-toolbar-button">
+          <div class="wunjo-add-page">Add Page</div>
+        </div>
+        <div id="pen" title="Pen" class="wunjo-toolbar-pen-menu-button">
+          Pen
+        </div>
       </div>
-      <div id="closeNotebook" title="Close Notebook" class="goog-toolbar-button">
-        <div class="wunjo-close-notebook">Close</div>
-      </div>
-      <div id="addPage" title="Add Page" class="goog-toolbar-button">
-        <div class="wunjo-add-page">Add Page</div>
-      </div>
-      <div id="pen" title="Pen" class="wunjo-toolbar-pen-menu-button">
-        Pen
-      </div>
+      <div id="editor"></div>
     </div>
-    <div id="editor"></div>
 
     <script>(function() {
       var nbe = new wunjo.notebook.EditorArea();
