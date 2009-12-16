@@ -27,7 +27,7 @@
       <div id="addPage" title="Add Page" class="goog-toolbar-button">
         <div class="wunjo-add-page">Add Page</div>
       </div>
-      <div id="penColor" title="Pen Color" class="goog-toolbar-color-menu-button">
+      <div id="pen" title="Pen" class="goog-toolbar-color-menu-button">
         Color
       </div>
     </div>
@@ -61,8 +61,8 @@
         nb.addPage(new wunjo.notebook.Page(null, 1, 1, {autosize: true}));
       });
 
-      // Hookup penColor button
-      var pc = tb.getChild('penColor');
+      // Hookup pen button
+      var pc = tb.getChild('pen');
       pc.setSelectedColor(nbe.getPen().color);
       goog.events.listen(pc, goog.ui.Component.EventType.ACTION, function(e) {
         nbe.setPen(
