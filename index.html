@@ -13,7 +13,7 @@
     </script>
     <script language="JavaScript" src="wunjo/ui/drawingarea.js"></script>
     <script language="JavaScript" src="wunjo/notebook/notebook.js"></script>
-    <script language="JavaScript" src="wunjo/notebook/editor.js"></script>
+    <script language="JavaScript" src="wunjo/notebook/editorarea.js"></script>
   </head>
   <body>
 
@@ -34,7 +34,7 @@
     <div id="editor"></div>
 
     <script>(function() {
-      var nbe = new wunjo.notebook.Editor();
+      var nbe = new wunjo.notebook.EditorArea();
       nbe.decorate(goog.dom.$('editor'));
 
       var tb = new goog.ui.Toolbar();
