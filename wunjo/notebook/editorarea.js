@@ -284,7 +284,7 @@ wunjo.notebook.EditorArea.prototype.draw_ = function(canvas) {
 };
 
 wunjo.notebook.EditorArea.prototype.finishStroke_ = function() {
-  var points = this.points_;
+  var points = this.getPoints();
   wunjo.notebook.EditorArea.superClass_.finishStroke_.call(this);
   if (this.curPage_) {
     var layer;
