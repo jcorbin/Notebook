@@ -161,7 +161,7 @@ wunjo.ui.DrawingArea.prototype.startStroke_ = function(x, y) {
   this.redraw();
 };
 
-wunjo.ui.DrawingArea.prototype.updateStroke_ = function(x, y) {
+wunjo.ui.DrawingArea.prototype.addPoint_ = function(x, y) {
   if (this.last_) {
     if (x == this.last_[0] && y == this.last_[1]) return;
     if (this.pen_.halfSizeSq == undefined) {
@@ -189,11 +189,11 @@ wunjo.ui.DrawingArea.prototype.onMouseDown_ = function(evt) {
 };
 
 wunjo.ui.DrawingArea.prototype.onMouseMove_ = function(evt) {
-  this.updateStroke_(evt.offsetX, evt.offsetY);
+  this.addPoint_(evt.offsetX, evt.offsetY);
 };
 
 wunjo.ui.DrawingArea.prototype.onMouseUp_ = function(evt) {
-  this.updateStroke_(evt.offsetX, evt.offsetY);
+  this.addPoint_(evt.offsetX, evt.offsetY);
   this.finishStroke_();
 };
 
