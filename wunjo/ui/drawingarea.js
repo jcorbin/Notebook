@@ -37,7 +37,7 @@ wunjo.ui.DrawingArea.prototype.isEnabled = function(enable) {
 };
 
 wunjo.ui.DrawingArea.prototype.isDrawing = function() {
-  return this.points ? true : false;
+  return this.points_ ? true : false;
 };
 
 wunjo.ui.DrawingArea.prototype.getPoints = function() {
