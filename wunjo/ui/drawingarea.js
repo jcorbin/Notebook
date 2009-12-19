@@ -141,23 +141,6 @@ wunjo.ui.DrawingArea.prototype.draw_ = function(canvas) {
   }
 };
 
-wunjo.ui.DrawingArea.prototype.cleanupStroke_ = function() {
-  var elt = this.getElement(), hndl = this.getHandler();
-  hndl.unlisten(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
-  hndl.unlisten(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
-  hndl.unlisten(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
-  this.last_ = null;
-  this.points_ = null;
-};
-
-wunjo.ui.DrawingArea.prototype.startStroke_ = function(x, y) {
-  var elt = this.getElement(), hndl = this.getHandler();
-  hndl.listen(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
-  hndl.listen(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
-  hndl.listen(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
-  this.addPoint_(x, y);
-};
-
 wunjo.ui.DrawingArea.prototype.addPoint_ = function(x, y) {
   if (! this.points_)
     this.points_ = [];
@@ -176,7 +159,13 @@ wunjo.ui.DrawingArea.prototype.addPoint_ = function(x, y) {
 
 wunjo.ui.DrawingArea.prototype.finishStroke_ = function() {
   var points = this.points_;
-  this.cleanupStroke_();
+  var elt = this.getElement(), hndl = this.getHandler();
+  hndl.unlisten(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
+  hndl.unlisten(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
+  hndl.unlisten(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
+  this.last_ = null;
+  this.points_ = null;
+
   this.dispatchEvent({type: 'stroke', points: points});
 };
 
@@ -184,7 +173,12 @@ wunjo.ui.DrawingArea.prototype.onMouseDown_ = function(evt) {
   if (! this.enabled_) return;
   if (evt.button != this.penButton_)
     return;
-  this.startStroke_(evt.offsetX, evt.offsetY);
+
+  var elt = this.getElement(), hndl = this.getHandler();
+  hndl.listen(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
+  hndl.listen(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
+  hndl.listen(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
+  this.addPoint_(evt.offsetX, evt.offsetY);
 };
 
 wunjo.ui.DrawingArea.prototype.onMouseMove_ = function(evt) {
