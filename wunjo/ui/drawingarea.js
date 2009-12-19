@@ -155,13 +155,12 @@ wunjo.ui.DrawingArea.prototype.startStroke_ = function(x, y) {
   hndl.listen(elt, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
   hndl.listen(elt, goog.events.EventType.MOUSEUP, this.onMouseUp_);
   hndl.listen(elt, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
-  this.points_ = [];
-  this.last_ = [x, y];
-  this.points_.push(this.last_);
-  this.redraw();
+  this.addPoint_(x, y);
 };
 
 wunjo.ui.DrawingArea.prototype.addPoint_ = function(x, y) {
+  if (! this.points_)
+    this.points_ = [];
   if (this.last_) {
     if (x == this.last_[0] && y == this.last_[1]) return;
     if (this.pen_.halfSizeSq == undefined) {
