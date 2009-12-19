@@ -36,10 +36,6 @@ wunjo.ui.DrawingArea.prototype.isEnabled = function(enable) {
   return this.enabled_;
 };
 
-wunjo.ui.DrawingArea.prototype.isDrawing = function() {
-  return this.points_ ? true : false;
-};
-
 wunjo.ui.DrawingArea.prototype.getPoints = function() {
   if (! this.points_) {
     throw Error('Not drawing, no points');
