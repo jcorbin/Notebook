@@ -18,6 +18,9 @@ goog.inherits(wunjo.ui.DrawingArea, goog.ui.Component);
 wunjo.ui.DrawingArea.prototype.last_ = null;
 wunjo.ui.DrawingArea.prototype.points_ = null;
 wunjo.ui.DrawingArea.prototype.enabled_ = true;
+wunjo.ui.DrawingArea.prototype.penButton_ =
+  goog.events.BrowserEvent.MouseButton.LEFT;
+
 
 wunjo.ui.DrawingArea.prototype.setEnabled = function(enable) {
   if (this.enabled_ != enable) {
@@ -180,6 +183,8 @@ wunjo.ui.DrawingArea.prototype.finishStroke_ = function() {
 
 wunjo.ui.DrawingArea.prototype.onMouseDown_ = function(evt) {
   if (! this.enabled_) return;
+  if (evt.button != this.penButton_)
+    return;
   this.startStroke_(evt.offsetX, evt.offsetY);
 };
 
