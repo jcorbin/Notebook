@@ -87,7 +87,7 @@ wunjo.ui.DrawingArea.prototype.getCanvas = function() {
 };
 
 wunjo.ui.DrawingArea.prototype.delayRedraw = function() {
-  if (! this.inDocument_) return;
+  if (! this.isInDocument()) return;
   var win = this.dom_.getWindow();
   if (this.redrawTo_) {
     win.clearTimeout(this.redrawTo_);
@@ -97,7 +97,7 @@ wunjo.ui.DrawingArea.prototype.delayRedraw = function() {
 };
 
 wunjo.ui.DrawingArea.prototype.redraw = function() {
-  if (! this.inDocument_) return;
+  if (! this.isInDocument()) return;
   if (this.redrawTo_) {
     this.dom_.getWindow().clearTimeout(this.redrawTo_);
     delete this.redrawTo_;
