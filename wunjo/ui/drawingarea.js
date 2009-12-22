@@ -196,4 +196,100 @@ wunjo.ui.DrawingArea.Tool.prototype.change_ = function() {
   });
 };
 
+
+wunjo.ui.DrawingArea.Pen = function(area, color, size) {
+  wunjo.ui.DrawingArea.Tool.call(this, area);
+  this.color_ = color || '#000';
+  this.size_ = size || 3;
+};
+goog.inherits(wunjo.ui.DrawingArea.Pen, wunjo.ui.DrawingArea.Tool);
+
+wunjo.ui.DrawingArea.Pen.prototype.button_ =
+  goog.events.BrowserEvent.MouseButton.LEFT;
+
+wunjo.ui.DrawingArea.Pen.prototype.getColor = function() {
+  return this.color_;
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.setColor = function(color) {
+  this.color_ = color;
+  this.change_('color');
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.getSize = function() {
+  return this.size_;
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.setSize = function(size) {
+  this.size_ = size;
+  delete this.halfSizeSq_;
+  this.change_('size');
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.draw = function(canvas) {
+  wunjo.notebook.Stroke.draw(canvas, this.color_, this.size_, this.points_);
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.hookup = function(canvas) {
+  wunjo.ui.DrawingArea.Pen.superClass_.hookup.call(this, canvas);
+  this.getHandler().listen(
+    canvas, goog.events.EventType.MOUSEDOWN, this.onMouseDown_
+  );
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.addPoint = function(x, y) {
+  if (! this.points_)
+    this.points_ = [];
+  if (this.last_) {
+    if (x == this.last_[0] && y == this.last_[1])
+      return;
+    if (this.halfSizeSq_ == undefined)
+      this.halfSizeSq_ = Math.pow(this.size_/2, 2);
+    var dSq =
+      Math.pow(this.last_[0] - x, 2) +
+      Math.pow(this.last_[1] - y, 2);
+    if (dSq <= this.halfSizeSq_)
+      return;
+  }
+  this.last_ = [x, y];
+  this.points_.push(x, y);
+  this.redraw();
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.onMouseDown_ = function(evt) {
+  if (evt.button != this.button_)
+    return;
+  var hndl = this.getHandler();
+  hndl.listen(evt.target, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
+  hndl.listen(evt.target, goog.events.EventType.MOUSEUP, this.onMouseUp_);
+  hndl.listen(evt.target, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
+  this.addPoint(evt.offsetX, evt.offsetY);
+  this.activate();
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.onMouseMove_ = function(evt) {
+  this.addPoint(evt.offsetX, evt.offsetY);
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.onMouseUp_ = function(evt) {
+  this.addPoint(evt.offsetX, evt.offsetY);
+  this.finishStroke_(evt.target);
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.onMouseOut_ = function(evt) {
+  this.finishStroke_(evt.target);
+};
+
+wunjo.ui.DrawingArea.Pen.prototype.finishStroke_ = function(canvas) {
+  var points = this.points_;
+  var hndl = this.getHandler();
+  hndl.unlisten(canvas, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
+  hndl.unlisten(canvas, goog.events.EventType.MOUSEUP, this.onMouseUp_);
+  hndl.unlisten(canvas, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
+  delete this.last_;
+  delete this.points_;
+  this.finish_('stroke', points);
+  this.deactivate();
+};
+
 // vim:set ts=2 sw=2 expandtab:
