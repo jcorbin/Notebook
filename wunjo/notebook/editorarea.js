@@ -295,21 +295,10 @@ wunjo.notebook.EditorArea.prototype.getCurrentLayer = function() {
 wunjo.notebook.EditorArea.prototype.finishStroke_ = function() {
   var points = this.getPoints();
   wunjo.notebook.EditorArea.superClass_.finishStroke_.call(this);
-  if (this.curPage_) {
-    var layer;
-    if (! this.curPage_.getLayerCount()) {
-      layer = this.curPage_.addLayer(
-        new wunjo.notebook.Layer('default')
-      );
-    } else {
-      layer = this.curPage_.getLayer(0);
-    }
-    var stroke = new wunjo.notebook.Stroke(this.pen_.size, this.pen_.color);
-    for (var i=0; i<points.length; i++) {
-      stroke.addPoint(points[i][0], points[i][1]);
-    }
-    layer.addItem(stroke);
-  }
+  if (this.curPage_)
+    this.getCurrentLayer().addItem(new wunjo.notebook.Stroke(
+      this.pen_.size, this.pen_.color, points
+    ));
 };
 
 // vim:set ts=2 sw=2 expandtab:
