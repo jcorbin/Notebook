@@ -440,7 +440,6 @@ wunjo.notebook.Layer.prototype.removeItem = function(item) {
 wunjo.notebook.Stroke = function(width, color, startX, startY) {
   this.color = color;
   this.width = width;
-  this.points = [];
   if (startX != undefined && startY != undefined) {
     this.addPoint(startX, startY);
   }
@@ -451,6 +450,7 @@ wunjo.notebook.Layer.itemTypes['stroke'] = wunjo.notebook.Stroke;
 wunjo.notebook.Stroke.unserialize = function(data) {
   var stroke = new wunjo.notebook.Stroke(data.width, data.color);
   if (data.points) {
+    stroke.points = [];
     for (var i=0, l=data.points; i<l.length; i++) {
       stroke.points.push([l[i][0], l[i][1]]);
     }
@@ -461,16 +461,16 @@ wunjo.notebook.Stroke.unserialize = function(data) {
 wunjo.notebook.Stroke.prototype.serialize = function() {
   var data = {
     color: this.color,
-    width: this.width,
-    points: []
+    width: this.width
   };
-  for (var i=0, l=this.points; i<l.length; i++) {
-    data.points.push([l[i][0], l[i][1]]);
-  }
+  if (this.points)
+    data.points = goog.array.clone(this.points);
   return data;
 };
 
 wunjo.notebook.Stroke.prototype.addPoint = function(x, y) {
+  if (! this.points)
+    this.points = [];
   this.points.push([x, y]);
 };
 
