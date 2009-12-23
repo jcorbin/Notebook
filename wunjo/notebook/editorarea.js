@@ -283,6 +283,15 @@ wunjo.notebook.EditorArea.prototype.draw_ = function(canvas) {
   wunjo.notebook.EditorArea.superClass_.draw_.call(this, canvas);
 };
 
+wunjo.notebook.EditorArea.prototype.getCurrentLayer = function() {
+  if (! this.curPage_)
+    throw new Error('no current page');
+  if (this.curPage_.getLayerCount())
+    return this.curPage_.getLayer(0);
+  else
+    return this.curPage_.addLayer(new wunjo.notebook.Layer('default'));
+};
+
 wunjo.notebook.EditorArea.prototype.finishStroke_ = function() {
   var points = this.getPoints();
   wunjo.notebook.EditorArea.superClass_.finishStroke_.call(this);
