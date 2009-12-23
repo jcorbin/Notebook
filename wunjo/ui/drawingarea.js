@@ -10,6 +10,7 @@ goog.require('goog.ui.Component');
 
 wunjo.ui.DrawingArea = function(opt_domHelper) {
   goog.ui.Component.call(this, opt_domHelper);
+  this.currentTool_ = null;
   this.tools_ = [];
 };
 goog.inherits(wunjo.ui.DrawingArea, goog.ui.Component);
@@ -19,6 +20,8 @@ wunjo.ui.DrawingArea.EventType = {
   TOOL_ADDED: 'toolAdded',
   // Dispatched when a tool is removed
   TOOL_REMOVED: 'toolRemoved',
+  // Dispatched when the current tool changes
+  CURRENT_TOOL_CHANGE: 'currentToolChanged',
   // Dispatched when a tool activates
   TOOL_ACTIVATE: 'toolActivate',
   // Dispatched when a tool deactivates
@@ -45,6 +48,35 @@ wunjo.ui.DrawingArea.prototype.isEnabled = function(enable) {
   return this.enabled_;
 };
 
+wunjo.ui.DrawingArea.prototype.setCurrentTool = function(tool) {
+  if (tool && ! goog.array.contains(this.tools_, tool))
+    throw new Error("Tool not in area");
+  var canvas = this.getCanvas();
+  if (this.currentTool_) {
+    if (this.isInDocument())
+      this.currentTool_.unhookup(canvas);
+    else if (this.currentTool_.isActive())
+      this.currentTool_.deactivate();
+    this.currentTool_ = null;
+  }
+  if (tool) {
+    this.currentTool_ = tool;
+    if (this.isInDocument())
+      this.currentTool_.hookup(canvas);
+    else if (this.currentTool_.isActive())
+      this.currentTool_.deactivate();
+  }
+  this.dispatchEvent({
+    type: wunjo.ui.DrawingArea.EventType.CURRENT_TOOL_CHANGE,
+    tool: tool
+  });
+  return tool;
+};
+
+wunjo.ui.DrawingArea.prototype.getCurrentTool = function() {
+  return this.currentTool_;
+};
+
 wunjo.ui.DrawingArea.prototype.decorateInternal = function(element) {
   wunjo.ui.DrawingArea.superClass_.decorateInternal.call(this, element);
 
@@ -61,11 +93,15 @@ wunjo.ui.DrawingArea.prototype.createDom = function() {
 wunjo.ui.DrawingArea.prototype.enterDocument = function() {
   wunjo.ui.DrawingArea.superClass_.enterDocument.call(this);
   var canvas = this.getCanvas();
+  if (this.currentTool_)
+    this.currentTool_.hookup(canvas);
   this.draw_(canvas);
 };
 
 wunjo.ui.DrawingArea.prototype.exitDocument = function() {
   wunjo.ui.DrawingArea.superClass_.exitDocument.call(this);
+  if (this.currentTool_)
+    this.currentTool_.unhookup(this.getCanvas());
 };
 
 wunjo.ui.DrawingArea.prototype.getCanvas = function() {
@@ -94,6 +130,8 @@ wunjo.ui.DrawingArea.prototype.redraw = function() {
 };
 
 wunjo.ui.DrawingArea.prototype.draw_ = function(canvas) {
+  if (this.currentTool_ && this.currentTool_.isActive())
+    this.currentTool_.draw(canvas);
 };
 
 
@@ -109,12 +147,16 @@ wunjo.ui.DrawingArea.Tool = function(area) {
     type: wunjo.ui.DrawingArea.EventType.TOOL_ADDED,
     tool: this
   });
+  if (! this.area_.currentTool_)
+    this.area_.setCurrentTool(this);
 };
 goog.inherits(wunjo.ui.DrawingArea.Tool, goog.events.EventTarget);
 
 wunjo.ui.DrawingArea.Tool.prototype.disposeInternal = function() {
   if (this.isActive())
     this.deactivate();
+  if (this.area_.currentTool_ === this)
+    this.area_.setCurrentTool(null);
   goog.array.remove(this.area_.tools_, this);
   this.dispatchEvent({
     type: wunjo.ui.DrawingArea.EventType.TOOL_REMOVED,
