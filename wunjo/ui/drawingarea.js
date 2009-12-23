@@ -108,27 +108,7 @@ wunjo.ui.DrawingArea.prototype.redraw = function() {
 };
 
 wunjo.ui.DrawingArea.prototype.drawPath_ = function drawPath(canvas, points, pen) {
-  if (points.length <= 0) return;
-
-  var ctx = canvas.getContext('2d');
-  ctx.strokeStyle = pen.color;
-  ctx.fillStyle = pen.color;
-  ctx.lineWidth = pen.size;
-
-  if (points.length == 1) {
-    var half = pen.size/2;
-    ctx.fillRect(
-      points[0][0]-half, points[0][1]-half,
-      pen.size, pen.size
-    );
-  } else {
-    ctx.beginPath();
-    ctx.moveTo(points[0][0], points[0][1]);
-    for (var i=1; i<points.length; i++) {
-      ctx.lineTo(points[i][0], points[i][1]);
-    }
-    ctx.stroke();
-  }
+  wunjo.notebook.Stroke.draw(canvas, pen.color, pen.size, points);
 };
 
 wunjo.ui.DrawingArea.prototype.draw_ = function(canvas) {
