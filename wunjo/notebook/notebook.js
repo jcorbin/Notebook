@@ -440,9 +440,10 @@ wunjo.notebook.Layer.prototype.removeItem = function(item) {
 wunjo.notebook.Stroke = function(width, color, startX, startY) {
   this.color = color;
   this.width = width;
-  if (startX != undefined && startY != undefined) {
+  if (startX != undefined && startY != undefined)
     this.addPoint(startX, startY);
-  }
+  else if (goog.isArrayLike(startX))
+    this.points = goog.array.clone(startX);
 };
 
 wunjo.notebook.Layer.itemTypes['stroke'] = wunjo.notebook.Stroke;
