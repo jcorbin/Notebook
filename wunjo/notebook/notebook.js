@@ -475,17 +475,23 @@ wunjo.notebook.Stroke.prototype.addPoint = function(x, y) {
 };
 
 wunjo.notebook.Stroke.prototype.draw = function(canvas) {
-  if (this.points.length <= 1) return;
+  if (this.points.length <= 0) return;
   var ctx = canvas.getContext('2d');
-  ctx.strokeStyle = this.color;
-  ctx.lineWidth = this.width;
-  var half = this.width/2;
-  ctx.beginPath();
-  ctx.moveTo(this.points[0][0], this.points[0][1]);
-  for (var i=1; i<this.points.length; i++) {
-    ctx.lineTo(this.points[i][0], this.points[i][1]);
+  if (this.points.length == 1) {
+    var half = this.width/2;
+    ctx.fillRect(
+      points[0][0]-half, points[0][1]-half,
+      this.width, this.width
+    );
+  } else {
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.width;
+    ctx.beginPath();
+    ctx.moveTo(this.points[0][0], this.points[0][1]);
+    for (var i=1; i<this.points.length; i++)
+      ctx.lineTo(this.points[i][0], this.points[i][1]);
+    ctx.stroke();
   }
-  ctx.stroke();
 };
 
 // vim:set ts=2 sw=2 expandtab:
