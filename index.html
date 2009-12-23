@@ -68,14 +68,7 @@
       });
 
       // Hookup pen button
-      var pc = tb.getChild('pen');
-      pc.setValue(nbe.getPen());
-      goog.events.listen(pc, goog.ui.Component.EventType.ACTION, function(e) {
-        nbe.setPen(
-          e.target.getSelectedColor(),
-          e.target.getSelectedSize()
-        );
-      });
+      tb.getChild('pen').setPen(new wunjo.ui.DrawingArea.Pen(nbe));
 
       goog.events.listen(nbe, 'notebookchanged', function(e) {
         var has = e.notebook ? true : false;

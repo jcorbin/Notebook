@@ -107,16 +107,16 @@ wunjo.ui.PenMenuButton.prototype.handleMenuAction = function(e) {
   var handled = false;
   if (typeof e.target.getSelectedColor == 'function') {
     // User clicked something that looks like a color palette.
-    this.setValue({
-      color: e.target.getSelectedColor(),
-      size: this.getSelectedSize()
-    });
+    var color = e.target.getSelectedColor();
+    this.setValue({color: color, size: this.getSelectedSize()});
+    if (this.pen_)
+      this.pen_.setColor(color);
     handled = true;
   } else if (e.target instanceof wunjo.ui.PenSizeMenuItem) {
-    this.setValue({
-      color: this.getSelectedColor(),
-      size: e.target.getValue()
-    });
+    var size = e.target.getValue();
+    this.setValue({color: this.getSelectedColor(), size: size});
+    if (this.pen_)
+      this.pen_.setSize(size);
     handled = true;
   }
 
@@ -148,6 +148,25 @@ wunjo.ui.PenMenuButton.prototype.setSelectedSize = function(size) {
       item.setSelected(item.getValue() == size);
     }
   }
+};
+
+wunjo.ui.PenMenuButton.prototype.getPen = function() {
+  return this.pen_;
+};
+
+wunjo.ui.PenMenuButton.prototype.setPen = function(pen) {
+  if (pen) {
+    if (! pen instanceof wunjo.ui.DrawingArea.Pen)
+      throw new Error('Invalid pen');
+    this.pen_ = pen;
+  } else {
+    delete this.pen_;
+  }
+  if (this.pen_)
+    this.setValue({
+      color: this.pen_.getColor(),
+      size: this.pen_.getSize()
+    });
 };
 
 wunjo.ui.PenMenuButton.prototype.setValue = function(val) {
