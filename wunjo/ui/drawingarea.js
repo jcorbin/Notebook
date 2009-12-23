@@ -129,7 +129,7 @@ wunjo.ui.DrawingArea.prototype.addPoint_ = function(x, y) {
     if (dSq <= this.pen_.halfSizeSq) return;
   }
   this.last_ = [x, y];
-  this.points_.push(this.last_);
+  this.points_.push(x, y);
   this.redraw();
 };
 
