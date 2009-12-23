@@ -449,14 +449,7 @@ wunjo.notebook.Stroke = function(width, color, startX, startY) {
 wunjo.notebook.Layer.itemTypes['stroke'] = wunjo.notebook.Stroke;
 
 wunjo.notebook.Stroke.unserialize = function(data) {
-  var stroke = new wunjo.notebook.Stroke(data.width, data.color);
-  if (data.points) {
-    stroke.points = [];
-    for (var i=0, l=data.points; i<l.length; i++) {
-      stroke.points.push([l[i][0], l[i][1]]);
-    }
-  }
-  return stroke;
+  return new wunjo.notebook.Stroke(data.width, data.color, data.points);
 };
 
 wunjo.notebook.Stroke.prototype.serialize = function() {
