@@ -476,7 +476,7 @@ wunjo.notebook.Stroke.prototype.addPoint = function(x, y) {
 
 wunjo.notebook.Stroke.prototype.draw = function(canvas) {
   if (this.points.length <= 1) return;
-  ctx = canvas.getContext('2d');
+  var ctx = canvas.getContext('2d');
   ctx.strokeStyle = this.color;
   ctx.lineWidth = this.width;
   var half = this.width/2;
