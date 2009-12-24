@@ -38,14 +38,14 @@ wunjo.notebook.EditorArea.prototype.curPage_ = null;
 wunjo.notebook.EditorArea.prototype.dsize_ = null;
 
 wunjo.notebook.EditorArea.prototype.enterDocument = function() {
-  var elt = this.getElement();
+  var hndl = this.getHandler(), elt = this.getElement();
   this.dsize_ = [
     elt.offsetWidth - elt.clientWidth,
     elt.offsetHeight - elt.clientHeight
   ];
   wunjo.notebook.EditorArea.superClass_.enterDocument.call(this);
   this.getCanvas().dpi = wunjo.notebook.EditorArea.getDPI();
-  this.getHandler().listen(
+  hndl.listen(
     this.dom_.getWindow(), goog.events.EventType.RESIZE,
     this.onWindowResize_
   );
