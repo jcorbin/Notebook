@@ -467,6 +467,20 @@ wunjo.notebook.Stroke.prototype.serialize = function() {
   return data;
 };
 
+wunjo.notebook.Stroke.prototype.getPointCount = function() {
+  return this.points/2;
+};
+
+wunjo.notebook.Stroke.prototype.getPointAt = function(i) {
+  var i2 = 2*i;
+  return [this.points[i2], this.points[i2+1]];
+};
+
+wunjo.notebook.Stroke.prototype.eachPoint = function(f) {
+  for (var i=0, n=0; i<this.points.length; i+=2, n++)
+    f(this.points[i], this.points[i+1], n);
+};
+
 wunjo.notebook.Stroke.prototype.addPoint = function(x, y) {
   if (! this.points)
     this.points = [];
