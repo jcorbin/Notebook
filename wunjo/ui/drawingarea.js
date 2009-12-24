@@ -307,6 +307,7 @@ wunjo.ui.DrawingArea.Pen.prototype.onMouseDown_ = function(evt) {
   hndl.listen(evt.target, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
   this.addPoint(evt.offsetX, evt.offsetY);
   this.activate();
+  evt.preventDefault();
 };
 
 wunjo.ui.DrawingArea.Pen.prototype.onMouseMove_ = function(evt) {
