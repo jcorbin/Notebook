@@ -299,6 +299,11 @@ wunjo.notebook.EditorArea.prototype.getCurrentLayer = function() {
 wunjo.notebook.EditorArea.prototype.onToolFinish_ = function(evt) {
   if (! this.curPage_) return;
   var tool = evt.tool, item = null;
+  if (tool instanceof wunjo.ui.DrawingArea.Pen)
+    if (evt.action == 'stroke')
+      item = new wunjo.notebook.Stroke(
+        tool.getSize(), tool.getColor(), evt.data
+      );
   if (item)
     this.getCurrentLayer().addItem(item);
 };
