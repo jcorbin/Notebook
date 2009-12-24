@@ -49,6 +49,10 @@ wunjo.notebook.EditorArea.prototype.enterDocument = function() {
     this.dom_.getWindow(), goog.events.EventType.RESIZE,
     this.onWindowResize_
   );
+  hndl.listen(
+    this, wunjo.ui.DrawingArea.EventType.TOOL_FINISH,
+    this.onToolFinish_
+  );
 };
 
 wunjo.notebook.EditorArea.prototype.setMessage = function(mess) {
@@ -292,13 +296,11 @@ wunjo.notebook.EditorArea.prototype.getCurrentLayer = function() {
     return this.curPage_.addLayer(new wunjo.notebook.Layer('default'));
 };
 
-wunjo.notebook.EditorArea.prototype.finishStroke_ = function() {
-  var points = this.getPoints();
-  wunjo.notebook.EditorArea.superClass_.finishStroke_.call(this);
-  if (this.curPage_)
-    this.getCurrentLayer().addItem(new wunjo.notebook.Stroke(
-      this.pen_.size, this.pen_.color, points
-    ));
+wunjo.notebook.EditorArea.prototype.onToolFinish_ = function(evt) {
+  if (! this.curPage_) return;
+  var tool = evt.tool, item = null;
+  if (item)
+    this.getCurrentLayer().addItem(item);
 };
 
 // vim:set ts=2 sw=2 expandtab:
