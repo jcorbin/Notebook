@@ -14,6 +14,7 @@ goog.inherits(wunjo.notebook, goog.events.EventTarget);
 wunjo.notebook.prototype.pages_ = null;
 
 wunjo.notebook.prototype.disposeInternal = function() {
+  wunjo.notebook.superClass_.disposeInternal.call(this);
   if (this.pages_) {
     for (var i=0; i<this.pages_.length; i++) {
       this.pages_[i].dispose();
@@ -160,6 +161,7 @@ wunjo.notebook.Page.prototype.serialize = function() {
 };
 
 wunjo.notebook.Page.prototype.disposeInternal = function() {
+  wunjo.notebook.Page.superClass_.disposeInternal.call(this);
   if (this.layers_) {
     for (var i=0; i<this.layers_.length; i++) {
       this.layers_[i].dispose();
