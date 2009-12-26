@@ -31,7 +31,6 @@ wunjo.notebook.EditorArea.getDPI = function() {
 wunjo.notebook.EditorArea.prototype.messageFont = 'normal bold 16px/18px sans-serif';
 wunjo.notebook.EditorArea.prototype.notebook_ = null;
 wunjo.notebook.EditorArea.prototype.message_ = null;
-wunjo.notebook.EditorArea.prototype.autosizing_ = null;
 wunjo.notebook.EditorArea.prototype.nbeh_ = null;
 wunjo.notebook.EditorArea.prototype.pgeh_ = null;
 wunjo.notebook.EditorArea.prototype.curPage_ = null;
@@ -45,10 +44,6 @@ wunjo.notebook.EditorArea.prototype.enterDocument = function() {
   ];
   wunjo.notebook.EditorArea.superClass_.enterDocument.call(this);
   this.getCanvas().dpi = wunjo.notebook.EditorArea.getDPI();
-  hndl.listen(
-    this.dom_.getWindow(), goog.events.EventType.RESIZE,
-    this.onWindowResize_
-  );
   hndl.listen(
     this, wunjo.ui.DrawingArea.EventType.TOOL_FINISH,
     this.onToolFinish_
@@ -136,9 +131,7 @@ wunjo.notebook.EditorArea.prototype.setCurrentPage = function(page) {
   if (page != null && ! page instanceof wunjo.notebook.Page) {
     page = this.notebook_.getPage(page);
   }
-  if (this.autosizing_) {
-    this.autosizing_ = null;
-  }
+  this.setAutoSizing(null);
   if (this.pgeh_) {
     this.pgeh_.dispose();
     this.pgeh_ = null;
@@ -150,7 +143,7 @@ wunjo.notebook.EditorArea.prototype.setCurrentPage = function(page) {
     this.pgeh_ = new goog.events.EventHandler(this);
     this.pgeh_.listen(this.curPage_, 'resize', this.onPageResize_);
     if (this.curPage_.options.autosize) {
-      this.updateSize_();
+      this.updateSize();
     } else {
       this.updatePageSize_(this.curPage_.getSize());
     }
@@ -196,36 +189,16 @@ wunjo.notebook.EditorArea.prototype.createDom = function() {
   );
 };
 
-wunjo.notebook.EditorArea.prototype.setAutosize_ = function(minSize) {
-  this.autosizing_ = minSize;
-  this.updateSize_();
-};
-
-wunjo.notebook.EditorArea.prototype.updateSize_ = function() {
-  var size = this.getAvailableArea();
-  if (this.autosizing_) {
-    size.width = Math.max(size.width, this.autosizing_[0]);
-    size.height = Math.max(size.height, this.autosizing_[1]);
-    var canvas = this.getCanvas();
-    if (canvas.width != size.width)
-      canvas.width = size.width;
-    if (canvas.height != size.height)
-      canvas.height = size.height;
-  } else if (this.curPage_ && this.curPage_.options.autosize) {
-    // FIXME convert wunjo.notebook.Page to use size objects
-    this.curPage_.updateSize([size.width, size.height]);
-  }
-};
-
-wunjo.notebook.EditorArea.prototype.onWindowResize_ = function() {
-  if (this.autosizing_) {
-    this.updateSize_();
-    this.delayRedraw();
-  } else if (this.curPage_ && this.curPage_.options.autosize) {
-    // FIXME convert wunjo.notebook.Page to use size objects
+wunjo.notebook.EditorArea.prototype.updateSize = function() {
+  var r = wunjo.notebook.EditorArea.superClass_.updateSize.call(this);
+  if (r) return r;
+  if (this.curPage_ && this.curPage_.options.autosize) {
     var size = this.getAvailableArea();
+    // FIXME convert wunjo.notebook.Page to use size objects
     this.curPage_.updateSize([size.width, size.height]);
+    return true;
   }
+  return false;
 };
 
 wunjo.notebook.EditorArea.prototype.onPageResize_ = function(evt) {
@@ -251,7 +224,7 @@ wunjo.notebook.EditorArea.prototype.draw_ = function(canvas) {
       ctx = canvas.getContext('2d');
     ctx.font = this.messageFont;
     var met = ctx.measureText(this.message_);
-    this.setAutosize_([Math.ceil(met.width*.15)*10, 24]);
+    this.setAutoSizing(new goog.math.Size(Math.ceil(met.width*.15)*10, 24));
 
     ctx.font = this.messageFont;
     ctx.textBaseline = 'middle';

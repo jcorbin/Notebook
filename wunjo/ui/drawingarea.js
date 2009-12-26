@@ -33,6 +33,7 @@ wunjo.ui.DrawingArea.EventType = {
 };
 
 wunjo.ui.DrawingArea.prototype.enabled_ = true;
+wunjo.ui.DrawingArea.prototype.autosizing_ = null;
 
 wunjo.ui.DrawingArea.prototype.setEnabled = function(enable) {
   if (this.enabled_ != enable) {
@@ -46,6 +47,31 @@ wunjo.ui.DrawingArea.prototype.setEnabled = function(enable) {
 
 wunjo.ui.DrawingArea.prototype.isEnabled = function(enable) {
   return this.enabled_;
+};
+
+wunjo.ui.DrawingArea.prototype.setAutoSizing = function(minSize) {
+  this.autosizing_ = minSize;
+  this.updateSize();
+};
+
+wunjo.ui.DrawingArea.prototype.getAutoSizing = function() {
+  return this.autosizing_;
+};
+
+wunjo.ui.DrawingArea.prototype.updateSize = function() {
+  if (this.autosizing_) {
+    var size = this.getAvailableArea();
+    size.width = Math.max(size.width, this.autosizing_.width);
+    size.height = Math.max(size.height, this.autosizing_.height);
+    var canvas = this.getCanvas();
+    if (canvas.width != size.width)
+      canvas.width = size.width;
+    if (canvas.height != size.height)
+      canvas.height = size.height;
+    this.delayRedraw();
+    return true;
+  }
+  return false;
 };
 
 wunjo.ui.DrawingArea.prototype.setCurrentTool = function(tool) {
@@ -92,7 +118,11 @@ wunjo.ui.DrawingArea.prototype.createDom = function() {
 
 wunjo.ui.DrawingArea.prototype.enterDocument = function() {
   wunjo.ui.DrawingArea.superClass_.enterDocument.call(this);
-  var canvas = this.getCanvas();
+  var hndl = this.getHandler(), canvas = this.getCanvas();
+  hndl.listen(
+    this.dom_.getWindow(), goog.events.EventType.RESIZE,
+    this.onWindowResize_
+  );
   if (this.currentTool_)
     this.currentTool_.hookup(canvas);
   this.draw_(canvas);
@@ -151,6 +181,10 @@ wunjo.ui.DrawingArea.prototype.redraw = function() {
 wunjo.ui.DrawingArea.prototype.draw_ = function(canvas) {
   if (this.currentTool_ && this.currentTool_.isActive())
     this.currentTool_.draw(canvas);
+};
+
+wunjo.ui.DrawingArea.prototype.onWindowResize_ = function() {
+  this.updateSize();
 };
 
 
