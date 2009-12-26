@@ -196,14 +196,6 @@ wunjo.notebook.EditorArea.prototype.createDom = function() {
   );
 };
 
-wunjo.notebook.EditorArea.prototype.getAvailableArea = function() {
-  var elt = this.getContainer();
-  return [
-    elt.offsetWidth - this.dsize_[0],
-    elt.offsetHeight - this.dsize_[1]
-  ];
-};
-
 wunjo.notebook.EditorArea.prototype.setAutosize_ = function(minSize) {
   this.autosizing_ = minSize;
   this.updateSize_();
@@ -212,19 +204,16 @@ wunjo.notebook.EditorArea.prototype.setAutosize_ = function(minSize) {
 wunjo.notebook.EditorArea.prototype.updateSize_ = function() {
   var size = this.getAvailableArea();
   if (this.autosizing_) {
-    size = [
-      Math.max(size[0], this.autosizing_[0]),
-      Math.max(size[1], this.autosizing_[1])
-    ];
+    size.width = Math.max(size.width, this.autosizing_[0]);
+    size.height = Math.max(size.height, this.autosizing_[1]);
     var canvas = this.getCanvas();
-    if (canvas.width != size[0]) {
-      canvas.width = size[0];
-    }
-    if (canvas.height != size[1]) {
-      canvas.height = size[1];
-    }
+    if (canvas.width != size.width)
+      canvas.width = size.width;
+    if (canvas.height != size.height)
+      canvas.height = size.height;
   } else if (this.curPage_ && this.curPage_.options.autosize) {
-    this.curPage_.updateSize(size);
+    // FIXME convert wunjo.notebook.Page to use size objects
+    this.curPage_.updateSize([size.width, size.height]);
   }
 };
 
@@ -233,7 +222,9 @@ wunjo.notebook.EditorArea.prototype.onWindowResize_ = function() {
     this.updateSize_();
     this.delayRedraw();
   } else if (this.curPage_ && this.curPage_.options.autosize) {
-    this.curPage_.updateSize(this.getAvailableArea());
+    // FIXME convert wunjo.notebook.Page to use size objects
+    var size = this.getAvailableArea();
+    this.curPage_.updateSize([size.width, size.height]);
   }
 };
 
@@ -242,13 +233,14 @@ wunjo.notebook.EditorArea.prototype.onPageResize_ = function(evt) {
 };
 
 wunjo.notebook.EditorArea.prototype.updatePageSize_ = function(size) {
+  // FIXME convert wunjo.notebook.Page to use size objects
   var
     elt = this.getContainer(),
     canvas = this.getCanvas(),
     avail = this.getAvailableArea();
   canvas.width = size[0];
   canvas.height = size[1];
-  elt.style.overflow = (size[0] > avail[0] || size[1] > avail[1]) ? 'auto' : 'hidden';
+  elt.style.overflow = (size[0] > avail.width || size[1] > avail.height) ? 'auto' : 'hidden';
   this.draw_(this.getCanvas());
 };
 

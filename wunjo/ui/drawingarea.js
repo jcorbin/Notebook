@@ -123,6 +123,10 @@ wunjo.ui.DrawingArea.prototype.getCanvas = function() {
   throw Error("Coludn't find canvas element");
 };
 
+wunjo.ui.DrawingArea.prototype.getAvailableArea = function() {
+  return goog.style.getSize(this.getContainer());
+};
+
 wunjo.ui.DrawingArea.prototype.delayRedraw = function() {
   if (! this.isInDocument()) return;
   var win = this.dom_.getWindow();
