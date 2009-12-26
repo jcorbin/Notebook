@@ -196,18 +196,6 @@ wunjo.notebook.EditorArea.prototype.createDom = function() {
   );
 };
 
-wunjo.notebook.EditorArea.prototype.getCanvas = function() {
-  var elt = this.getElement();
-  if (elt.tagName.toLowerCase() == 'canvas') {
-    return elt;
-  }
-  var c = elt.getElementsByTagName('canvas');
-  if (c.length) {
-    return c[0];
-  }
-  throw Error("Coludn't find canvas element");
-};
-
 wunjo.notebook.EditorArea.prototype.getAvailableArea = function() {
   var elt = this.getElement();
   if (elt.tagName.toLowerCase() == 'canvas') {
