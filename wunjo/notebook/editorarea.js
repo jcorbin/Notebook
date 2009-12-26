@@ -38,7 +38,7 @@ wunjo.notebook.EditorArea.prototype.curPage_ = null;
 wunjo.notebook.EditorArea.prototype.dsize_ = null;
 
 wunjo.notebook.EditorArea.prototype.enterDocument = function() {
-  var hndl = this.getHandler(), elt = this.getElement();
+  var hndl = this.getHandler(), elt = this.getContainer();
   this.dsize_ = [
     elt.offsetWidth - elt.clientWidth,
     elt.offsetHeight - elt.clientHeight
@@ -182,7 +182,7 @@ wunjo.notebook.EditorArea.prototype.decorateInternal = function(element) {
 
   wunjo.notebook.EditorArea.superClass_.decorateInternal.call(this, element);
 
-  var elt = this.getElement();
+  var elt = this.getContainer();
   if (elt.tagName.toLowerCase() == 'div') {
     goog.dom.classes.add(elt, 'wunjo-notebookeditor');
     elt.style.overflow = 'clip';
@@ -197,10 +197,7 @@ wunjo.notebook.EditorArea.prototype.createDom = function() {
 };
 
 wunjo.notebook.EditorArea.prototype.getAvailableArea = function() {
-  var elt = this.getElement();
-  if (elt.tagName.toLowerCase() == 'canvas') {
-    throw Error('No container');
-  }
+  var elt = this.getContainer();
   return [
     elt.offsetWidth - this.dsize_[0],
     elt.offsetHeight - this.dsize_[1]
@@ -246,7 +243,7 @@ wunjo.notebook.EditorArea.prototype.onPageResize_ = function(evt) {
 
 wunjo.notebook.EditorArea.prototype.updatePageSize_ = function(size) {
   var
-    elt = this.getElement(),
+    elt = this.getContainer(),
     canvas = this.getCanvas(),
     avail = this.getAvailableArea();
   canvas.width = size[0];

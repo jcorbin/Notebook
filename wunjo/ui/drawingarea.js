@@ -104,6 +104,13 @@ wunjo.ui.DrawingArea.prototype.exitDocument = function() {
     this.currentTool_.unhookup(this.getCanvas());
 };
 
+wunjo.ui.DrawingArea.prototype.getContainer = function() {
+  var elt = this.getElement();
+  if (elt.tagName.toLowerCase() == 'canvas')
+    throw Error('No container');
+  return elt;
+};
+
 wunjo.ui.DrawingArea.prototype.getCanvas = function() {
   var elt = this.getElement();
   if (elt.tagName.toLowerCase() == 'canvas') {
