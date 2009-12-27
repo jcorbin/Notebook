@@ -109,6 +109,13 @@ wunjo.ui.DrawingArea.prototype.getCurrentTool = function() {
 wunjo.ui.DrawingArea.prototype.decorateInternal = function(element) {
   wunjo.ui.DrawingArea.superClass_.decorateInternal.call(this, element);
 
+  var elt = this.getElement();
+  if (elt.tagName.toLowerCase() != 'canvas') {
+    if (! elt.getElementsByTagName('canvas').length)
+      elt.appendChild(this.dom_.createElement('canvas'));
+    goog.dom.classes.add(elt, 'wunjo-drawingarea-container');
+  }
+
   var canvas = this.getCanvas();
   goog.dom.classes.add(canvas, 'wunjo-drawingarea');
   canvas.width = 1;

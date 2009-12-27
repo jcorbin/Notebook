@@ -169,10 +169,6 @@ wunjo.notebook.EditorArea.prototype.getCurrentPage = function(page) {
 };
 
 wunjo.notebook.EditorArea.prototype.decorateInternal = function(element) {
-  if (! element.getElementsByTagName('canvas').length) {
-    element.appendChild(this.dom_.createElement('canvas'));
-  }
-
   wunjo.notebook.EditorArea.superClass_.decorateInternal.call(this, element);
 
   var elt = this.getContainer();
