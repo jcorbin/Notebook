@@ -2,6 +2,9 @@ goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 
 goog.provide('wunjo.notebook');
+goog.provide('wunjo.notebook.Page');
+goog.provide('wunjo.notebook.Layer');
+goog.provide('wunjo.notebook.Stroke');
 
 wunjo.notebook = function(title, options) {
   goog.events.EventTarget.call(this);
