@@ -494,11 +494,11 @@ wunjo.notebook.Stroke.prototype.draw = function(canvas) {
 wunjo.notebook.Stroke.draw = function(canvas, color, width, points) {
   if (points.length <= 0) return;
   var ctx = canvas.getContext('2d');
+  ctx.strokeStyle = ctx.fillStyle = color;
   if (points.length == 2) {
     var half = width/2;
     ctx.fillRect(points[0]-half, points[1]-half, width, width);
   } else {
-    ctx.strokeStyle = color;
     ctx.lineWidth = width;
     ctx.beginPath();
     ctx.moveTo(points[0], points[1]);
