@@ -177,10 +177,7 @@ wunjo.notebook.EditorArea.prototype.decorateInternal = function(element) {
 };
 
 wunjo.notebook.EditorArea.prototype.createDom = function() {
-  this.decorateInternal(this.dom_.createElement('div')
-    .appendChild(this.dom_.createElement('canvas'))
-    .parentNode
-  );
+  this.decorateInternal(this.dom_.createElement('div'));
 };
 
 wunjo.notebook.EditorArea.prototype.updateSize = function() {
