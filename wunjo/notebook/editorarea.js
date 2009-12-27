@@ -210,9 +210,7 @@ wunjo.notebook.EditorArea.prototype.updatePageSize_ = function(size) {
 
 wunjo.notebook.EditorArea.prototype.draw_ = function(canvas) {
   if (this.message_) {
-    var
-      canvas = this.getCanvas(),
-      ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
     ctx.font = this.messageFont;
     var met = ctx.measureText(this.message_);
     this.setAutoSizing(new goog.math.Size(Math.ceil(met.width*.15)*10, 24));
