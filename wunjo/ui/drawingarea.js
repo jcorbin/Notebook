@@ -80,10 +80,9 @@ wunjo.ui.DrawingArea.prototype.updateSize = function() {
 wunjo.ui.DrawingArea.prototype.setCurrentTool = function(tool) {
   if (tool && ! goog.array.contains(this.tools_, tool))
     throw new Error("Tool not in area");
-  var canvas = this.getCanvas();
   if (this.currentTool_) {
     if (this.isInDocument())
-      this.currentTool_.unhookup(canvas);
+      this.currentTool_.unhookup(this.getCanvas());
     else if (this.currentTool_.isActive())
       this.currentTool_.deactivate();
     this.currentTool_ = null;
@@ -91,7 +90,7 @@ wunjo.ui.DrawingArea.prototype.setCurrentTool = function(tool) {
   if (tool) {
     this.currentTool_ = tool;
     if (this.isInDocument())
-      this.currentTool_.hookup(canvas);
+      this.currentTool_.hookup(this.getCanvas());
     else if (this.currentTool_.isActive())
       this.currentTool_.deactivate();
   }
