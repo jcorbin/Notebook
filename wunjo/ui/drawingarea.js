@@ -152,13 +152,9 @@ wunjo.ui.DrawingArea.prototype.getContainer = function() {
 
 wunjo.ui.DrawingArea.prototype.getCanvas = function() {
   var elt = this.getElement();
-  if (elt.tagName.toLowerCase() == 'canvas') {
-    return elt;
-  }
+  if (elt.tagName.toLowerCase() == 'canvas') return elt;
   var c = elt.getElementsByTagName('canvas');
-  if (c.length) {
-    return c[0];
-  }
+  if (c.length) return c[0];
   throw Error("Coludn't find canvas element");
 };
 
