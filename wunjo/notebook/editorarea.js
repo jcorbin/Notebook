@@ -172,10 +172,8 @@ wunjo.notebook.EditorArea.prototype.decorateInternal = function(element) {
   wunjo.notebook.EditorArea.superClass_.decorateInternal.call(this, element);
 
   var elt = this.getContainer();
-  if (elt.tagName.toLowerCase() == 'div') {
-    goog.dom.classes.add(elt, 'wunjo-notebookeditor');
+  if (elt.tagName.toLowerCase() == 'div')
     elt.style.overflow = 'clip';
-  }
 };
 
 wunjo.notebook.EditorArea.prototype.createDom = function() {
