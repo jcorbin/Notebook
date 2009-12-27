@@ -7,6 +7,9 @@ goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventType');
 goog.require('goog.ui.Component');
 
+// TODO split this out of the "notebook" namespace
+goog.require('wunjo.notebook.Stroke');
+
 
 wunjo.ui.DrawingArea = function(opt_domHelper) {
   goog.ui.Component.call(this, opt_domHelper);
