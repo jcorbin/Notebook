@@ -94,6 +94,29 @@ wunjo.ui.PenMenuButton.newDefaultMenu = function(opt_domHelper) {
   return goog.ui.ColorMenuButton.newColorMenu(items, opt_domHelper);
 };
 
+wunjo.ui.PenMenuButton.prototype.getStorageKey = function() {
+  return 'wunjo_notebook_'+this.getId()+'_value';
+};
+
+wunjo.ui.PenMenuButton.prototype.setValueFromStorage = function() {
+  if (! this.pen_ || ! this.isInDocument()) return false;
+  var
+    win = this.getDomHelper().getWindow(),
+    key = this.getStorageKey();
+  if (key in win.localStorage) {
+    this.setValue(win.localStorage[key]);
+    this.pen_.setColor(this.getSelectedColor());
+    this.pen_.setSize(this.getSelectedSize());
+    return true;
+  }
+  return false;
+};
+
+wunjo.ui.PenMenuButton.prototype.enterDocument = function() {
+  wunjo.ui.PenMenuButton.superClass_.enterDocument.call(this);
+  this.setValueFromStorage();
+};
+
 wunjo.ui.PenMenuButton.prototype.setOpen = function(open) {
   if (open && this.getItemCount() == 0) {
     this.setMenu(
@@ -122,7 +145,13 @@ wunjo.ui.PenMenuButton.prototype.handleMenuAction = function(e) {
 
   if (handled) e.stopPropagation();
   goog.ui.MenuButton.prototype.handleMenuAction.call(this, e);
-  if (handled) this.dispatchEvent(goog.ui.Component.EventType.ACTION);
+  if (handled) {
+    var
+      win = this.getDomHelper().getWindow(),
+      val = this.getValue();
+    win.localStorage[this.getStorageKey()] = val.color+':'+val.size;
+    this.dispatchEvent(goog.ui.Component.EventType.ACTION);
+  }
 };
 
 wunjo.ui.PenMenuButton.prototype.getSelectedColor = function() {
@@ -162,7 +191,7 @@ wunjo.ui.PenMenuButton.prototype.setPen = function(pen) {
   } else {
     delete this.pen_;
   }
-  if (this.pen_)
+  if (this.pen_ && ! this.setValueFromStorage())
     this.setValue({
       color: this.pen_.getColor(),
       size: this.pen_.getSize()
