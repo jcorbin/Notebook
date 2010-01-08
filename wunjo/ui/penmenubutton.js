@@ -184,18 +184,20 @@ wunjo.ui.PenMenuButton.prototype.getPen = function() {
 };
 
 wunjo.ui.PenMenuButton.prototype.setPen = function(pen) {
+  if (this.pen_) {
+    this.pen_ = null;
+  }
+
   if (pen) {
     if (! pen instanceof wunjo.ui.DrawingArea.Pen)
       throw new Error('Invalid pen');
     this.pen_ = pen;
-  } else {
-    delete this.pen_;
+    if (! this.setValueFromStorage())
+      this.setValue({
+        color: this.pen_.getColor(),
+        size: this.pen_.getSize()
+      });
   }
-  if (this.pen_ && ! this.setValueFromStorage())
-    this.setValue({
-      color: this.pen_.getColor(),
-      size: this.pen_.getSize()
-    });
 };
 
 wunjo.ui.PenMenuButton.prototype.setValue = function(val) {
