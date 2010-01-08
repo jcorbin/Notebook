@@ -36,4 +36,33 @@ html, body {
   background-color: #eee;
 }
 
+/* Only draw borders when in a non-default state. */
+.goog-toolbar-menu-button-checked .goog-toolbar-menu-button-outer-box,
+.goog-toolbar-menu-button-selected .goog-toolbar-menu-button-outer-box {
+  border-width: 1px 0;
+  border-style: solid;
+  padding: 0;
+}
+
+.goog-toolbar-menu-button-checked .goog-toolbar-menu-button-inner-box,
+.goog-toolbar-menu-button-selected .goog-toolbar-menu-button-inner-box {
+  border-width: 0 1px;
+  border-style: solid;
+  padding: 3px 4px;
+}
+
+/* Active/checked/selected styles. */
+.goog-toolbar-menu-button-checked,
+.goog-toolbar-menu-button-selected {
+  /* Active/checked/selected background color always wins. */
+  background-color: #dde1eb !important;
+}
+
+.goog-toolbar-menu-button-checked .goog-toolbar-menu-button-outer-box,
+.goog-toolbar-menu-button-checked .goog-toolbar-menu-button-inner-box,
+.goog-toolbar-menu-button-selected .goog-toolbar-menu-button-outer-box,
+.goog-toolbar-menu-button-selected .goog-toolbar-menu-button-inner-box {
+  border-color: #729bd1;
+}
+
 /* vim:set ts=2 sw=2 expandtab: */
