@@ -69,6 +69,7 @@ wunjo.ui.PenMenuButton = function(content, value, opt_menu, opt_renderer,
   goog.ui.ColorMenuButton.call(this, content || 'Pen', opt_menu,
       opt_renderer || wunjo.ui.PenMenuButtonRenderer.getInstance(),
       opt_domHelper);
+  this.setSupportedState(goog.ui.Component.State.CHECKED, true);
   this.setValue(value || {color: '#000', size :3});
 };
 goog.inherits(wunjo.ui.PenMenuButton, goog.ui.ColorMenuButton);
@@ -185,6 +186,9 @@ wunjo.ui.PenMenuButton.prototype.getPen = function() {
 
 wunjo.ui.PenMenuButton.prototype.setPen = function(pen) {
   if (this.pen_) {
+    goog.events.unlisten(this.pen_.getArea(),
+      wunjo.ui.DrawingArea.EventType.CURRENT_TOOL_CHANGE,
+      this.onCurrentToolChange_, false, this);
     this.pen_ = null;
   }
 
@@ -192,12 +196,21 @@ wunjo.ui.PenMenuButton.prototype.setPen = function(pen) {
     if (! pen instanceof wunjo.ui.DrawingArea.Pen)
       throw new Error('Invalid pen');
     this.pen_ = pen;
+    var area = this.pen_.getArea();
+    goog.events.listen(area,
+      wunjo.ui.DrawingArea.EventType.CURRENT_TOOL_CHANGE,
+      this.onCurrentToolChange_, false, this);
+    this.setChecked(area.getCurrentTool() === this.pen_);
     if (! this.setValueFromStorage())
       this.setValue({
         color: this.pen_.getColor(),
         size: this.pen_.getSize()
       });
   }
+};
+
+wunjo.ui.PenMenuButton.prototype.onCurrentToolChange_ = function(evt) {
+  this.setChecked(this.pen_ === evt.tool);
 };
 
 wunjo.ui.PenMenuButton.prototype.setValue = function(val) {
