@@ -62,6 +62,7 @@ wunjo.ui.DrawingArea.prototype.getAutoSizing = function() {
 };
 
 wunjo.ui.DrawingArea.prototype.updateSize = function() {
+  if (! this.isInDocument()) return;
   if (this.autosizing_) {
     var size = this.getAvailableArea();
     size.width = Math.max(size.width, this.autosizing_.width);
