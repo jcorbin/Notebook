@@ -247,3 +247,5 @@ goog.ui.registry.setDecoratorByClassName(
     return new wunjo.ui.PenMenuButton(null, null, null,
       wunjo.ui.ToolbarPenMenuButtonRenderer.getInstance());
   });
+
+// vim:set ts=2 sw=2 expandtab:
