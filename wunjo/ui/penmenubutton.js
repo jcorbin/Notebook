@@ -127,6 +127,12 @@ wunjo.ui.PenMenuButton.prototype.setOpen = function(open) {
   wunjo.ui.PenMenuButton.superClass_.setOpen.call(this, open);
 };
 
+wunjo.ui.PenMenuButton.prototype.handleMouseDown = function(e) {
+  wunjo.ui.PenMenuButton.superClass_.handleMouseDown.call(this, e);
+  if (this.pen_)
+    this.pen_.getArea().setCurrentTool(this.pen_);
+};
+
 wunjo.ui.PenMenuButton.prototype.handleMenuAction = function(e) {
   var handled = false;
   if (typeof e.target.getSelectedColor == 'function') {
