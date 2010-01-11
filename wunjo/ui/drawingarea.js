@@ -293,6 +293,7 @@ wunjo.ui.DrawingArea.Tool.prototype.finish_ = function(action, data) {
     action: action,
     data: data
   });
+  this.deactivate();
 };
 
 wunjo.ui.DrawingArea.Tool.prototype.change_ = function() {
@@ -397,7 +398,6 @@ wunjo.ui.DrawingArea.Pen.prototype.finishStroke_ = function(canvas) {
   delete this.last_;
   delete this.points_;
   this.finish_('stroke', points);
-  this.deactivate();
 };
 
 // vim:set ts=2 sw=2 expandtab:
