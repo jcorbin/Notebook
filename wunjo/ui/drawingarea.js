@@ -133,6 +133,7 @@ wunjo.ui.DrawingArea.prototype.enterDocument = function() {
     this.dom_.getWindow(), goog.events.EventType.RESIZE,
     this.onWindowResize_
   );
+  this.updateSize();
   if (this.currentTool_)
     this.currentTool_.hookup(canvas);
   this.draw_(canvas);
