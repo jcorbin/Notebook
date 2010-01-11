@@ -401,10 +401,9 @@ wunjo.ui.DrawingArea.Pen.prototype.onMouseOut_ = function(evt) {
 };
 
 wunjo.ui.DrawingArea.Pen.prototype.finishStroke_ = function(canvas) {
-  var points = this.points_;
+  this.finish_('stroke', this.points_);
   delete this.last_;
   delete this.points_;
-  this.finish_('stroke', points);
 };
 
 // vim:set ts=2 sw=2 expandtab:
