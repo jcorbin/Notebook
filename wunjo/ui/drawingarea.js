@@ -378,7 +378,7 @@ wunjo.ui.DrawingArea.Pen.prototype.addPoint = function(x, y) {
 wunjo.ui.DrawingArea.Pen.prototype.onMouseDown_ = function(evt) {
   if (evt.button != this.button_)
     return;
-  var hndl = this.getHandler();
+  var hndl = this.getActiveHandler();
   hndl.listen(evt.target, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
   hndl.listen(evt.target, goog.events.EventType.MOUSEUP, this.onMouseUp_);
   hndl.listen(evt.target, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
@@ -402,10 +402,6 @@ wunjo.ui.DrawingArea.Pen.prototype.onMouseOut_ = function(evt) {
 
 wunjo.ui.DrawingArea.Pen.prototype.finishStroke_ = function(canvas) {
   var points = this.points_;
-  var hndl = this.getHandler();
-  hndl.unlisten(canvas, goog.events.EventType.MOUSEMOVE, this.onMouseMove_);
-  hndl.unlisten(canvas, goog.events.EventType.MOUSEUP, this.onMouseUp_);
-  hndl.unlisten(canvas, goog.events.EventType.MOUSEOUT, this.onMouseOut_);
   delete this.last_;
   delete this.points_;
   this.finish_('stroke', points);
