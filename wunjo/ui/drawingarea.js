@@ -232,11 +232,20 @@ wunjo.ui.DrawingArea.Tool.prototype.disposeInternal = function() {
     this.handler_.dispose();
     delete this.handler_;
   }
+  if (this.activeHandler_) {
+    this.activeHandler_.dispose();
+    delete this.activeHandler_;
+  }
 };
 
 wunjo.ui.DrawingArea.Tool.prototype.getHandler = function() {
   return this.handler_ ||
          (this.handler_ = new goog.events.EventHandler(this));
+};
+
+wunjo.ui.DrawingArea.Tool.prototype.getActiveHandler = function() {
+  return this.activeHandler_ ||
+         (this.activeHandler_ = new goog.events.EventHandler(this));
 };
 
 wunjo.ui.DrawingArea.Tool.prototype.active_ = false;
@@ -260,6 +269,8 @@ wunjo.ui.DrawingArea.Tool.prototype.activate = function() {
 
 wunjo.ui.DrawingArea.Tool.prototype.deactivate = function() {
   if (! this.active_) return;
+  if (this.activeHandler_)
+    this.activeHandler_.removeAll();
   this.active_ = false;
   this.area_.dispatchEvent({
     type: wunjo.ui.DrawingArea.EventType.TOOL_DEACTIVATE,
