@@ -128,10 +128,12 @@ wunjo.ui.DrawingArea.prototype.createDom = function() {
 
 wunjo.ui.DrawingArea.prototype.enterDocument = function() {
   wunjo.ui.DrawingArea.superClass_.enterDocument.call(this);
-  var hndl = this.getHandler(), canvas = this.getCanvas();
+  var
+    hndl = this.getHandler(),
+    win = this.dom_.getWindow(),
+    canvas = this.getCanvas();
   hndl.listen(
-    this.dom_.getWindow(), goog.events.EventType.RESIZE,
-    this.onWindowResize_
+    win, goog.events.EventType.RESIZE, this.onWindowResize_
   );
   this.updateSize();
   if (this.currentTool_)
